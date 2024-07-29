@@ -1,0 +1,58 @@
+package com.odfin.persistence.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+
+public class DBHelper {
+
+    public static final String SELECT = " SELECT ";
+    public static final String FROM = " FROM ";
+    public static final String WHERE = " WHERE ";
+
+    public static final String INSERT_INTO = " INSERT INTO ";
+    public static final String VALUES = " VALUES ";
+
+    public static final String UPDATE = " UPDATE ";
+    public static final String SET = " SET ";
+
+    public static final String DELETE = " DELETE ";
+
+    private static Connection connection = null;
+
+    // Private constructor to prevent instantiation
+    private DBHelper() { }
+
+    public static Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection(getMySqlUrl(), getMySqlProperties());
+        }
+        return connection;
+    }
+
+    private static Properties getMySqlProperties() {
+        Properties mySqlProperties = new Properties();
+        mySqlProperties.put("user", System.getenv("DB_USER"));
+        mySqlProperties.put("password", System.getenv("DB_PASSWORD"));
+        return mySqlProperties;
+    }
+
+    private static String getMySqlUrl() {
+        String host = System.getenv("DB_HOST");
+        int port = Integer.parseInt(System.getenv("DB_PORT"));
+        String dbName = System.getenv("DB_NAME");
+
+        return String.format("jdbc:mysql://%s:%d/%s?allowMultiQueries=true", host, port, dbName);
+    }
+
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
