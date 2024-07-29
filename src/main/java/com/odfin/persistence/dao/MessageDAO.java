@@ -10,6 +10,8 @@ public interface MessageDAO {
 
     Message getMessageById(Integer messageId) throws SQLException;
     List<Message> getAllMessages() throws SQLException;
-    void updateMessage(Message message) throws SQLException;
-    void deleteMessage(Integer messageId) throws SQLException;
+    Message updateMessage(Message message) throws SQLException;
+    Message insertMessage(Message message) throws SQLException;
+    boolean deleteMessage(Integer messageId) throws SQLException;
+
 }

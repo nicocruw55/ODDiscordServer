@@ -2,6 +2,7 @@ package com.odfin.facade;
 
 import com.odfin.persistence.dao.UserDAO;
 import com.odfin.persistence.domain.User;
+import com.odfin.persistence.factory.DAOFactory;
 import com.odfin.persistence.impl.MySqlUserDAO;
 
 import java.rmi.RemoteException;
@@ -13,10 +14,9 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
 
     private final UserDAO userDAO;
 
-    // Konstruktor, der die DAO initialisiert
     public UserFacadeImpl() throws RemoteException {
         super();
-        this.userDAO = new MySqlUserDAO();
+        this.userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
     }
 
     @Override

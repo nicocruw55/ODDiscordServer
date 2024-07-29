@@ -2,9 +2,7 @@ package com.odfin.core;
 
 import com.odfin.facade.MessageFacade;
 import com.odfin.facade.ServerFacade;
-import com.odfin.facade.UserFacade;
 import com.odfin.persistence.domain.Message;
-import com.odfin.persistence.domain.User;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -19,7 +17,6 @@ public class TestClient {
         ServerFacade s = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName());
         MessageFacade m = s.getMessageFacade();
         List<Message> ms = m.getAllMessages();
-
 
     }
 }

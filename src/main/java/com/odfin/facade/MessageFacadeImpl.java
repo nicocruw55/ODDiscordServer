@@ -3,8 +3,10 @@ package com.odfin.facade;
 
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
+import com.odfin.persistence.factory.DAOFactory;
 import com.odfin.persistence.impl.MySqlMessageDAO;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -17,7 +19,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
 
     public MessageFacadeImpl() throws RemoteException {
         super();
-        this.messageDAO = new MySqlMessageDAO();
+        this.messageDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getMessageDAO();
     }
 
     @Override

@@ -3,12 +3,13 @@ package com.odfin.persistence.impl;
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
 import com.odfin.persistence.domain.MessageType;
-import com.odfin.persistence.domain.User;
 import com.odfin.persistence.util.DBHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.odfin.persistence.util.DBHelper.*;
 
 public class MySqlMessageDAO implements MessageDAO {
 
@@ -31,84 +32,76 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public Message getMessageById(Integer messageId) throws SQLException {
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM ").append(TBL_NAME).append(" WHERE ").append(COL_ID).append(" = ?");
+        String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
-        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
-            stmt.setInt(1, messageId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return createMessage(rs);
-            }
-            return null;
-        }
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, messageId);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) return createMessage(rs);
+
+        return null;
     }
 
     @Override
     public List<Message> getAllMessages() throws SQLException {
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM ").append(TBL_NAME);
+        String query = SELECT + "*" + FROM + TBL_NAME;
 
         List<Message> messages = new ArrayList<>();
+        Connection conn = DBHelper.getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
 
-        try (Connection conn = DBHelper.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query.toString())) {
-
-            while (rs.next()) {
-                messages.add(createMessage(rs));
-            }
-
-        } catch (SQLException e) {
-            throw new SQLException("Error retrieving all messages", e);
-        }
+        while (rs.next()) messages.add(createMessage(rs));
 
         return messages;
     }
 
     @Override
-    public void updateMessage(Message message) throws SQLException {
-        StringBuilder query = new StringBuilder();
-        query.append("UPDATE ").append(TBL_NAME).append(" SET ")
-                .append(COL_USER).append(" = ?, ")
-                .append(COL_CONTENT).append(" = ?, ")
-                .append(COL_TIMESTAMP).append(" = ?, ")
-                .append(COL_MESSAGE_TYPE).append(" = ? ")
-                .append("WHERE ").append(COL_ID).append(" = ?");
+    public Message updateMessage(Message message) throws SQLException {
+        String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + COL_MESSAGE_TYPE + " = ? " + WHERE + COL_ID + " = ?";
 
-        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
-            stmt.setInt(1, message.getSenderId());
-            stmt.setString(2, message.getContent());
-            stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
-            stmt.setString(4, message.getMessageType().name());
-            stmt.setInt(5, message.getId());
-            stmt.executeUpdate();
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+
+        stmt.setInt(1, message.getSenderId());
+        stmt.setString(2, message.getContent());
+        stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
+        stmt.setString(4, message.getMessageType().name());
+        stmt.setInt(5, message.getId());
+        stmt.executeUpdate();
+
+        return getMessageById(message.getId());
+    }
+
+    public Message insertMessage(Message message) throws SQLException {
+        String query = INSERT_INTO + TBL_NAME + " (" + COL_USER + ", " + COL_CONTENT + ", " + COL_TIMESTAMP + ", " + COL_MESSAGE_TYPE + ") " + VALUES + "(?, ?, ?, ?)";
+
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        stmt.setInt(1, message.getSenderId());
+        stmt.setString(2, message.getContent());
+        stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
+        stmt.setString(4, message.getMessageType().name());
+        stmt.executeUpdate();
+
+        ResultSet rs = stmt.getGeneratedKeys();
+        if (rs.next()) {
+            message.setId(rs.getInt(1));
+            return getMessageById(message.getId());
         }
+        return null;
     }
 
     @Override
-    public void deleteMessage(Integer messageId) throws SQLException {
-        StringBuilder query = new StringBuilder();
-        query.append("DELETE FROM ").append(TBL_NAME).append(" WHERE ").append(COL_ID).append(" = ?");
+    public boolean deleteMessage(Integer id) throws SQLException {
+        String query = DELETE + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
-        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
-            stmt.setInt(1, messageId);
-            stmt.executeUpdate();
-        }
-    }
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, id);
 
-    private User getUserById(Integer userId) throws SQLException {
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM Users WHERE ID = ?");
-
-        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
-            stmt.setInt(1, userId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new User(rs.getInt("ID"), rs.getString("Name"), rs.getString("Password"));
-                }
-            }
-        }
-        return null;
+        return stmt.execute();
     }
 }

@@ -8,12 +8,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.odfin.persistence.util.DBHelper.*;
+
 public class MySqlUserDAO implements UserDAO {
 
-    private static final String TABLE_NAME = "Users";
-    private static final String COL_ID = "ID";
-    private static final String COL_NAME = "Name";
-    private static final String COL_PASSWORD = "Password";
+    public static final String TBL_NAME = "Users";
+    public static final String COL_ID = "ID";
+    public static final String COL_NAME = "Name";
+    public static final String COL_PASSWORD = "Password";
 
     public User createUser(ResultSet rs) throws SQLException {
         User user = new User();
@@ -25,64 +27,71 @@ public class MySqlUserDAO implements UserDAO {
 
     @Override
     public User getUserById(Integer userId) throws SQLException {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM ").append(TABLE_NAME).append(" WHERE ").append(COL_ID).append(" = ?");
+        String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
-        try (Connection connection = DBHelper.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql.toString())) {
-            statement.setInt(1, userId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return createUser(resultSet);
-                }
-            }
-        }
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, userId);
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) return createUser(resultSet);
+
         return null;
     }
 
     @Override
     public List<User> getAllUsers() throws SQLException {
+        String query = SELECT + "*" + FROM + TBL_NAME;
+
         List<User> users = new ArrayList<>();
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM ").append(TABLE_NAME);
+        Connection connection = DBHelper.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
 
-        try (Connection connection = DBHelper.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql.toString())) {
+        while (resultSet.next()) users.add(createUser(resultSet));
 
-            while (resultSet.next()) {
-                users.add(createUser(resultSet));
-            }
-        }
         return users;
     }
 
     @Override
-    public void updateUser(User user) throws SQLException {
-        StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE ").append(TABLE_NAME).append(" SET ")
-                .append(COL_NAME).append(" = ?, ")
-                .append(COL_PASSWORD).append(" = ? ")
-                .append("WHERE ").append(COL_ID).append(" = ?");
+    public User updateUser(User user) throws SQLException {
+        String query = UPDATE + TBL_NAME + SET + COL_NAME + " = ?, " + COL_PASSWORD + " = ? " + WHERE + COL_ID + " = ?";
 
-        try (Connection connection = DBHelper.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql.toString())) {
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getPassword());
-            statement.setInt(3, user.getId());
-            statement.executeUpdate();
-        }
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getPassword());
+        statement.setInt(3, user.getId());
+        statement.executeUpdate();
+
+        return getUserById(user.getId());
     }
 
     @Override
-    public void deleteUser(Integer userId) throws SQLException {
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM ").append(TABLE_NAME).append(" WHERE ").append(COL_ID).append(" = ?");
+    public boolean deleteUser(Integer id) throws SQLException {
+        String query = DELETE + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
-        try (Connection connection = DBHelper.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql.toString())) {
-            statement.setInt(1, userId);
-            statement.executeUpdate();
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, id);
+
+        return stmt.execute();
+    }
+
+    public User insertUser(User user) throws SQLException {
+        String query = INSERT_INTO + TBL_NAME + " (" + COL_NAME + ", " + COL_PASSWORD + ") " + VALUES + "(?, ?)";
+
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getPassword());
+        statement.executeUpdate();
+
+        ResultSet resultSet = statement.getGeneratedKeys();
+        if (resultSet.next()) {
+            user.setId(resultSet.getInt(1));
+            return getUserById(user.getId());
         }
+        return null;
     }
 }

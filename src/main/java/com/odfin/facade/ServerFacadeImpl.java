@@ -1,6 +1,5 @@
 package com.odfin.facade;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class ServerFacadeImpl implements ServerFacade{
