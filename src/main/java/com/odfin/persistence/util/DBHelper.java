@@ -21,7 +21,6 @@ public class DBHelper {
 
     private static Connection connection = null;
 
-    // Private constructor to prevent instantiation
     private DBHelper() { }
 
     public static Connection getConnection() throws SQLException {
@@ -33,15 +32,15 @@ public class DBHelper {
 
     private static Properties getMySqlProperties() {
         Properties mySqlProperties = new Properties();
-        mySqlProperties.put("user", System.getenv("DB_USER"));
-        mySqlProperties.put("password", System.getenv("DB_PASSWORD"));
+        mySqlProperties.put("user", "DAO");
+        mySqlProperties.put("password", "muehlenhoff187");
         return mySqlProperties;
     }
 
     private static String getMySqlUrl() {
-        String host = System.getenv("DB_HOST");
-        int port = Integer.parseInt(System.getenv("DB_PORT"));
-        String dbName = System.getenv("DB_NAME");
+        String host = "cruw-community.de";
+        int port = 3306;
+        String dbName = "ODDiscord";
 
         return String.format("jdbc:mysql://%s:%d/%s?allowMultiQueries=true", host, port, dbName);
     }

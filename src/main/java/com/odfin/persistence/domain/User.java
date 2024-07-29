@@ -1,22 +1,22 @@
 package com.odfin.persistence.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
+
     private Integer id;
     private String name;
     private String password;
 
-    public User() {
+    public User(){
+
     }
 
     public User(Integer id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;
-    }
-
-    public User(long id, String username, String password, String email, boolean onlineStatus) {
     }
 
     // Getter und Setter

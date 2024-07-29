@@ -6,12 +6,11 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface MessageFacade extends Remote {
+public interface MessageFacade extends Remote{
 
-    void sendMessage(Message message) throws RemoteException;
-    Message getMessageById(Long messageId) throws RemoteException;
+    Message getMessageById(Integer messageId) throws RemoteException;
     List<Message> getAllMessages() throws RemoteException;
     void updateMessage(Message message) throws RemoteException;
-    void deleteMessage(Long messageId) throws RemoteException;
+    void deleteMessage(Integer messageId) throws RemoteException;
 
 }

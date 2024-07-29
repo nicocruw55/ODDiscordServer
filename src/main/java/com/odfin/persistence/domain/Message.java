@@ -6,51 +6,37 @@ import java.util.Objects;
 
 public class Message implements Serializable {
 
-    private Long id;
-    private User sender;
-    private Long chatId;
+    private Integer id;
+    private Integer senderID;
     private String content;
     private LocalDateTime timestamp;
     private MessageType messageType;
 
-    public Message(long aLong, User userById, long aLong1, String string, LocalDateTime localDateTime, MessageType messageType) {
-
-    }
-
     public Message() {
     }
 
-    public Message(Long id, User sender, Long chatId, String content, LocalDateTime timestamp, MessageType messageType) {
+    public Message(Integer id, Integer senderID, String content, LocalDateTime timestamp, MessageType messageType) {
         this.id = id;
-        this.sender = sender;
-        this.chatId = chatId;
+        this.senderID = senderID;
         this.content = content;
         this.timestamp = timestamp;
         this.messageType = messageType;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public User getSender() {
-        return sender;
+    public Integer getSenderId() {
+        return senderID;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public Long getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
+    public void setSenderId(Integer senderID) {
+        this.senderID = senderID;
     }
 
     public String getContent() {
@@ -94,8 +80,7 @@ public class Message implements Serializable {
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", sender=" + sender +
-                ", chatId=" + chatId +
+                ", sender=" + senderID +
                 ", content='" + content + '\'' +
                 ", timestamp=" + timestamp +
                 ", messageType=" + messageType +

@@ -1,11 +1,10 @@
 package com.odfin.persistence.impl;
 
-
-
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
 import com.odfin.persistence.domain.MessageType;
 import com.odfin.persistence.domain.User;
+import com.odfin.persistence.util.DBHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,47 +14,31 @@ public class MySqlMessageDAO implements MessageDAO {
 
     public static final String TBL_NAME = "Messages";
     public static final String COL_ID = "ID";
-    public static final String COL_SENDER = "SenderID";
-    public static final String COL_CHAT = "ChatID";
+    public static final String COL_USER = "UserID";
     public static final String COL_CONTENT = "Content";
     public static final String COL_TIMESTAMP = "Timestamp";
     public static final String COL_MESSAGE_TYPE = "MessageType";
 
-    private Connection getConnection() throws SQLException {
-        // Hier sollte die tatsächliche Implementierung zur Verbindung zur Datenbank erfolgen
-        return DriverManager.getConnection("jdbc:yourdatabaseurl", "username", "password");
+    public Message createMessage(ResultSet rs) throws SQLException {
+        Message message = new Message();
+        message.setId(rs.getInt(COL_ID));
+        message.setSenderId(rs.getInt(COL_USER));
+        message.setContent(rs.getString(COL_CONTENT));
+        message.setTimestamp(rs.getTimestamp(COL_TIMESTAMP).toLocalDateTime());
+        message.setMessageType(MessageType.valueOf(rs.getString(COL_MESSAGE_TYPE)));
+        return message;
     }
 
     @Override
-    public void createMessage(Message message) throws SQLException {
-        String query = "INSERT INTO " + TBL_NAME + " (" + COL_SENDER + ", " + COL_CHAT + ", " + COL_CONTENT + ", " + COL_TIMESTAMP + ", " + COL_MESSAGE_TYPE + ") VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setLong(1, message.getSender().getId());
-            stmt.setLong(2, message.getChatId());
-            stmt.setString(3, message.getContent());
-            stmt.setTimestamp(4, Timestamp.valueOf(message.getTimestamp()));
-            stmt.setString(5, message.getMessageType().name());
-            stmt.executeUpdate();
-        }
-    }
+    public Message getMessageById(Integer messageId) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ").append(TBL_NAME).append(" WHERE ").append(COL_ID).append(" = ?");
 
-    @Override
-    public Message getMessageById(Long messageId) throws SQLException {
-        String query = "SELECT * FROM " + TBL_NAME + " WHERE " + COL_ID + " = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setLong(1, messageId);
+        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+            stmt.setInt(1, messageId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new Message(
-                        rs.getLong(COL_ID),
-                        getUserById(rs.getLong(COL_SENDER)),
-                        rs.getLong(COL_CHAT),
-                        rs.getString(COL_CONTENT),
-                        rs.getTimestamp(COL_TIMESTAMP).toLocalDateTime(),
-                        MessageType.valueOf(rs.getString(COL_MESSAGE_TYPE))
-                );
+                return createMessage(rs);
             }
             return null;
         }
@@ -63,73 +46,69 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public List<Message> getAllMessages() throws SQLException {
-        String query = "SELECT * FROM " + TBL_NAME;
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ").append(TBL_NAME);
+
         List<Message> messages = new ArrayList<>();
-        try (Connection conn = getConnection();
+
+        try (Connection conn = DBHelper.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(query.toString())) {
+
             while (rs.next()) {
-                messages.add(new Message(
-                        rs.getLong(COL_ID),
-                        getUserById(rs.getLong(COL_SENDER)),
-                        rs.getLong(COL_CHAT),
-                        rs.getString(COL_CONTENT),
-                        rs.getTimestamp(COL_TIMESTAMP).toLocalDateTime(),
-                        MessageType.valueOf(rs.getString(COL_MESSAGE_TYPE))
-                ));
+                messages.add(createMessage(rs));
             }
+
+        } catch (SQLException e) {
+            throw new SQLException("Error retrieving all messages", e);
         }
+
         return messages;
     }
 
     @Override
     public void updateMessage(Message message) throws SQLException {
-        String query = "UPDATE " + TBL_NAME + " SET " +
-                COL_SENDER + " = ?, " +
-                COL_CHAT + " = ?, " +
-                COL_CONTENT + " = ?, " +
-                COL_TIMESTAMP + " = ?, " +
-                COL_MESSAGE_TYPE + " = ? " +
-                "WHERE " + COL_ID + " = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setLong(1, message.getSender().getId());
-            stmt.setLong(2, message.getChatId());
-            stmt.setString(3, message.getContent());
-            stmt.setTimestamp(4, Timestamp.valueOf(message.getTimestamp()));
-            stmt.setString(5, message.getMessageType().name());
-            stmt.setLong(6, message.getId());
+        StringBuilder query = new StringBuilder();
+        query.append("UPDATE ").append(TBL_NAME).append(" SET ")
+                .append(COL_USER).append(" = ?, ")
+                .append(COL_CONTENT).append(" = ?, ")
+                .append(COL_TIMESTAMP).append(" = ?, ")
+                .append(COL_MESSAGE_TYPE).append(" = ? ")
+                .append("WHERE ").append(COL_ID).append(" = ?");
+
+        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+            stmt.setInt(1, message.getSenderId());
+            stmt.setString(2, message.getContent());
+            stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
+            stmt.setString(4, message.getMessageType().name());
+            stmt.setInt(5, message.getId());
             stmt.executeUpdate();
         }
     }
 
     @Override
-    public void deleteMessage(Long messageId) throws SQLException {
-        String query = "DELETE FROM " + TBL_NAME + " WHERE " + COL_ID + " = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setLong(1, messageId);
+    public void deleteMessage(Integer messageId) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        query.append("DELETE FROM ").append(TBL_NAME).append(" WHERE ").append(COL_ID).append(" = ?");
+
+        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+            stmt.setInt(1, messageId);
             stmt.executeUpdate();
         }
     }
 
-    private User getUserById(Long userId) throws SQLException {
-        // Hier eine Methode implementieren, die einen User anhand der ID aus der Datenbank abruft
-        String query = "SELECT * FROM Users WHERE ID = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setLong(1, userId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getLong("ID"),
-                        rs.getString("Username"),
-                        rs.getString("Password"),
-                        rs.getString("Email"),
-                        rs.getBoolean("OnlineStatus")
-                );
+    private User getUserById(Integer userId) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM Users WHERE ID = ?");
+
+        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(rs.getInt("ID"), rs.getString("Name"), rs.getString("Password"));
+                }
             }
-            return null;
         }
+        return null;
     }
 }

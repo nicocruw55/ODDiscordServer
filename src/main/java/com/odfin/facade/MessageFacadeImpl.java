@@ -5,11 +5,13 @@ import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
 import com.odfin.persistence.impl.MySqlMessageDAO;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.List;
 
-public class MessageFacadeImpl implements MessageFacade {
+public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFacade {
 
     private final MessageDAO messageDAO;
 
@@ -19,16 +21,7 @@ public class MessageFacadeImpl implements MessageFacade {
     }
 
     @Override
-    public void sendMessage(Message message) throws RemoteException {
-        try {
-            messageDAO.createMessage(message);
-        } catch (SQLException e) {
-            throw new RemoteException("Error sending message", e);
-        }
-    }
-
-    @Override
-    public Message getMessageById(Long messageId) throws RemoteException {
+    public Message getMessageById(Integer messageId) throws RemoteException {
         try {
             return messageDAO.getMessageById(messageId);
         } catch (SQLException e) {
@@ -55,7 +48,7 @@ public class MessageFacadeImpl implements MessageFacade {
     }
 
     @Override
-    public void deleteMessage(Long messageId) throws RemoteException {
+    public void deleteMessage(Integer messageId) throws RemoteException {
         try {
             messageDAO.deleteMessage(messageId);
         } catch (SQLException e) {

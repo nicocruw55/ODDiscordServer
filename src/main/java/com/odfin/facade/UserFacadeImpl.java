@@ -5,10 +5,11 @@ import com.odfin.persistence.domain.User;
 import com.odfin.persistence.impl.MySqlUserDAO;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserFacadeImpl implements UserFacade {
+public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
 
     private final UserDAO userDAO;
 
@@ -16,15 +17,6 @@ public class UserFacadeImpl implements UserFacade {
     public UserFacadeImpl() throws RemoteException {
         super();
         this.userDAO = new MySqlUserDAO();
-    }
-
-    @Override
-    public void createUser(User user) throws RemoteException {
-        try {
-            userDAO.createUser(user);
-        } catch (SQLException e) {
-            throw new RemoteException("Error creating user", e);
-        }
     }
 
     @Override

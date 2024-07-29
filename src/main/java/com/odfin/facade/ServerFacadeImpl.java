@@ -1,12 +1,15 @@
 package com.odfin.facade;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class ServerFacadeImpl implements ServerFacade {
+public class ServerFacadeImpl implements ServerFacade{
 
     private static MessageFacade messageFacade;
     private static UserFacade userFacade;
 
+    public ServerFacadeImpl() throws RemoteException {
+    }
 
     @Override
     public MessageFacade getMessageFacade() throws RemoteException {

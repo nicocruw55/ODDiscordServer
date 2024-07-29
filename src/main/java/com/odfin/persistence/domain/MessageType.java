@@ -1,6 +1,8 @@
 package com.odfin.persistence.domain;
 
-public enum MessageType {
+import java.io.Serializable;
+
+public enum MessageType implements Serializable {
     TEXT,
     IMAGE,
     FILE,
