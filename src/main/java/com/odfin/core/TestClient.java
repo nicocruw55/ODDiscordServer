@@ -20,16 +20,6 @@ public class TestClient {
         MessageFacade m = s.getMessageFacade();
         List<Message> ms = m.getAllMessages();
 
-        for(Message mm : ms){
-            System.out.println(mm);
-        }
-
-        UserFacade u = s.getUserFacade();
-        List<User> us = u.getAllUsers();
-
-        for(User uu : us){
-            System.out.println(uu);
-        }
 
     }
 }
