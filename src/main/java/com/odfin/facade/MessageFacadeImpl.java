@@ -18,7 +18,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     private final MessageDAO messageDAO;
 
     public MessageFacadeImpl() throws RemoteException {
-        super();
+        super(65300);
         this.messageDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getMessageDAO();
     }
 

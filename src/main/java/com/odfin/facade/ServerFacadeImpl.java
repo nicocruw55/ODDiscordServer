@@ -9,6 +9,7 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
     private static UserFacade userFacade;
 
     public ServerFacadeImpl() throws RemoteException {
+        super(65300);
     }
 
     @Override

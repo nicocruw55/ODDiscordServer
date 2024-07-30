@@ -15,7 +15,7 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
     private final UserDAO userDAO;
 
     public UserFacadeImpl() throws RemoteException {
-        super();
+        super(65300);
         this.userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
     }
 
