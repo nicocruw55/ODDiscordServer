@@ -38,7 +38,5 @@ public class VoiceClientHandler {
                 }
             }
         }).start();
-
-
     }
 }
