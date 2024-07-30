@@ -7,8 +7,9 @@ import java.net.*;
 public class VoiceChatClient {
     private static final int SAMPLE_RATE = 16000;
     private static final int BUFFER_SIZE = 4096;
-    private static final int PORT = 5000;
+    private static final int PORT = 6000;
     private static final String SERVER_ADDRESS = "localhost"; // Ersetze dies durch die Server-IP-Adresse oder Domain
+    private static final int HEARTBEAT_INTERVAL = 5000; // Heartbeat-Intervall in Millisekunden
 
     public static void main(String[] args) {
         AudioFormat format = new AudioFormat(SAMPLE_RATE, 16, 1, true, true);
@@ -29,10 +30,18 @@ public class VoiceChatClient {
             Thread sendThread = new Thread(() -> {
                 while (true) {
                     try {
+                        // Sende Sprachdaten
                         int bytesRead = microphone.read(buffer, 0, buffer.length);
                         DatagramPacket packet = new DatagramPacket(buffer, bytesRead, serverAddress, PORT);
                         sendSocket.send(packet);
-                    } catch (IOException e) {
+
+                        // Sende Heartbeat-Nachricht
+                        DatagramPacket heartbeatPacket = new DatagramPacket("HEARTBEAT".getBytes(), "HEARTBEAT".length(), serverAddress, PORT);
+                        sendSocket.send(heartbeatPacket);
+
+                        // Warte das nächste Intervall
+                        Thread.sleep(HEARTBEAT_INTERVAL);
+                    } catch (IOException | InterruptedException e) {
                         System.err.println("IOException while sending data: " + e.getMessage());
                         break; // Stop the thread if there is an exception
                     }

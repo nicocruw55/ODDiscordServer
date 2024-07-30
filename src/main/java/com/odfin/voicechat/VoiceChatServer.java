@@ -1,25 +1,28 @@
-package com.odfin.voicechat;
+package org.example;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketException;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 public class VoiceChatServer {
-    private static final int PORT = 5000;
+    private static final int PORT = 6000;
     private static final int BUFFER_SIZE = 4096;
     private static final int SAMPLE_RATE = 16000;
-    private static final int SAMPLE_SIZE_IN_BITS = 16;
-    private static final int CHANNELS = 1; // Mono
+    private static final long HEARTBEAT_TIMEOUT = 10000; // Timeout für Heartbeat in Millisekunden
+
+    private static Map<InetAddress, Long> clientLastHeartbeat = new HashMap<>();
 
     public static void main(String[] args) {
-        AudioFormat format = new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_IN_BITS, CHANNELS, true, true);
-        DataLine.Info infoForPlayback = new DataLine.Info(SourceDataLine.class, format);
+        AudioFormat format = new AudioFormat(SAMPLE_RATE, 16, 1, true, true);
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 
         try (
-                SourceDataLine speakers = (SourceDataLine) AudioSystem.getLine(infoForPlayback);
-                DatagramSocket receiveSocket = new DatagramSocket(PORT)
+                SourceDataLine speakers = (SourceDataLine) AudioSystem.getLine(info);
+                DatagramSocket socket = new DatagramSocket(PORT)
         ) {
             speakers.open(format);
             speakers.start();
@@ -29,38 +32,36 @@ public class VoiceChatServer {
 
             System.out.println("Voice Chat Server is running...");
 
-            Thread receiveThread = new Thread(() -> {
+            Thread heartbeatChecker = new Thread(() -> {
                 while (true) {
                     try {
-                        receiveSocket.receive(packet);
-                        speakers.write(packet.getData(), 0, packet.getLength());
-                    } catch (IOException e) {
-                        System.err.println("IOException while receiving data: " + e.getMessage());
-                        break; // Stop the thread if there is an exception
+                        Thread.sleep(HEARTBEAT_TIMEOUT);
+                        long now = System.currentTimeMillis();
+                        clientLastHeartbeat.entrySet().removeIf(entry -> now - entry.getValue() > HEARTBEAT_TIMEOUT);
+                        System.out.println("Active clients: " + clientLastHeartbeat.keySet());
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
                 }
             });
+            heartbeatChecker.start();
 
-            receiveThread.start();
-
-            // Keep the main thread alive to keep the server running
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                receiveSocket.close();
-                speakers.stop();
-                speakers.close();
-                System.out.println("Voice Chat Server stopped.");
-            }));
-
-            // Keep the main thread alive to keep the server running
-            synchronized (VoiceChatServer.class) {
+            while (true) {
                 try {
-                    VoiceChatServer.class.wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                    socket.receive(packet);
+                    InetAddress clientAddress = packet.getAddress();
+                    String message = new String(packet.getData(), 0, packet.getLength());
+
+                    if ("HEARTBEAT".equals(message)) {
+                        clientLastHeartbeat.put(clientAddress, System.currentTimeMillis());
+                    } else {
+                        speakers.write(packet.getData(), 0, packet.getLength());
+                    }
+                } catch (IOException e) {
+                    System.err.println("IOException while receiving data: " + e.getMessage());
                 }
             }
-
-        } catch (LineUnavailableException | SocketException e) {
+        } catch (LineUnavailableException | IOException e) {
             e.printStackTrace();
         }
     }
