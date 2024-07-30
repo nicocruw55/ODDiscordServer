@@ -1,14 +1,9 @@
 package com.odfin.facade;
 
-
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
-import com.odfin.persistence.domain.User;
 import com.odfin.persistence.factory.DAOFactory;
-import com.odfin.persistence.impl.MySqlMessageDAO;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -38,6 +33,15 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
             return messageDAO.getAllMessages();
         } catch (SQLException e) {
             throw new RemoteException("Error retrieving all messages", e);
+        }
+    }
+
+    @Override
+    public List<Message> getAllMessagesByChannelId(Integer channelId) throws RemoteException {
+        try {
+            return messageDAO.getAllMessagesByChannelId(channelId);
+        } catch (SQLException e) {
+            throw new RemoteException("Error updating message", e);
         }
     }
 

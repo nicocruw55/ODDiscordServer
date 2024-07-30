@@ -10,17 +10,17 @@ public class Message implements Serializable {
     private Integer senderID;
     private String content;
     private LocalDateTime timestamp;
-    private MessageType messageType;
+    //private MessageType messageType;
 
     public Message() {
     }
 
-    public Message(Integer id, Integer senderID, String content, LocalDateTime timestamp, MessageType messageType) {
+    public Message(Integer id, Integer senderID, String content, LocalDateTime timestamp) {
         this.id = id;
         this.senderID = senderID;
         this.content = content;
         this.timestamp = timestamp;
-        this.messageType = messageType;
+        //this.messageType = messageType;
     }
 
     public Integer getId() {
@@ -55,13 +55,13 @@ public class Message implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public MessageType getMessageType() {
-        return messageType;
-    }
+    //public MessageType getMessageType() {
+    //    return messageType;
+    //}
 
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
+    //public void setMessageType(MessageType messageType) {
+    //    this.messageType = messageType;
+    //}
 
     @Override
     public boolean equals(Object o) {
@@ -83,7 +83,16 @@ public class Message implements Serializable {
                 ", sender=" + senderID +
                 ", content='" + content + '\'' +
                 ", timestamp=" + timestamp +
-                ", messageType=" + messageType +
+                //", messageType=" + messageType +
                 '}';
     }
+
+    enum MessageType {
+        TEXT,
+        IMAGE,
+        FILE,
+        VIDEO,
+        OTHER
+    }
+
 }

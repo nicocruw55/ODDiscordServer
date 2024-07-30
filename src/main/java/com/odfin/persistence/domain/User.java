@@ -19,7 +19,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    // Getter und Setter
     public Integer getId() {
         return id;
     }

@@ -9,6 +9,7 @@ public interface UserDAO {
 
     User getUserById(Integer userId) throws SQLException;
     List<User> getAllUsers() throws SQLException;
+    List<User> getAllUsersFromChannel(Integer channelID) throws SQLException;
     User updateUser(User user) throws SQLException;
     User insertUser(User user) throws SQLException;
     boolean deleteUser(Integer userId) throws SQLException;

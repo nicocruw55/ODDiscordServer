@@ -14,7 +14,7 @@ public class VoiceClientHandler {
         new Thread(() -> {
             while (true) {
                 try{
-                    VoiceChannelDataPacket d = (VoiceChannelDataPacket) in.readObject();
+                    VoiceDataPacket d = (VoiceDataPacket) in.readObject();
                     voiceChatID = d.getVc();
                     for(VoiceClientHandler v : VoiceServer.clientHandlers){
                         if(v == this) continue;

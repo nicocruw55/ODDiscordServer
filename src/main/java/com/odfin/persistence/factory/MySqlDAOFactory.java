@@ -1,14 +1,11 @@
 package com.odfin.persistence.factory;
 
-import com.odfin.persistence.dao.ChatDAO;
+import com.odfin.persistence.dao.ChannelDAO;
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.dao.UserDAO;
-import com.odfin.persistence.impl.MySqlChatDAO;
+import com.odfin.persistence.impl.MySqlChannelDAO;
 import com.odfin.persistence.impl.MySqlMessageDAO;
 import com.odfin.persistence.impl.MySqlUserDAO;
-import com.odfin.persistence.util.DBHelper;
-
-import java.sql.SQLException;
 
 public class MySqlDAOFactory extends DAOFactory{
 
@@ -23,11 +20,7 @@ public class MySqlDAOFactory extends DAOFactory{
     }
 
     @Override
-    public ChatDAO getChatDAO() {
-        try {
-            return (ChatDAO) new MySqlChatDAO(DBHelper.getConnection());
-        } catch (SQLException e) {
-            throw new RuntimeException("Error getting Connection", e);
-        }
+    public ChannelDAO getChatDAO() {
+        return new MySqlChannelDAO();
     }
 }

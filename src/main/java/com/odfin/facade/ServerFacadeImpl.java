@@ -7,6 +7,7 @@ public class ServerFacadeImpl implements ServerFacade{
 
     private static MessageFacade messageFacade;
     private static UserFacade userFacade;
+    private static ChannelFacade channelFacade;
 
     public ServerFacadeImpl() throws RemoteException {
         super();
@@ -26,5 +27,13 @@ public class ServerFacadeImpl implements ServerFacade{
             userFacade = new UserFacadeImpl();
 
         return userFacade;
+    }
+
+    @Override
+    public ChannelFacade getChannelFacade() throws RemoteException {
+        if(channelFacade == null)
+            channelFacade = new ChannelFacadeImpl();
+
+        return channelFacade;
     }
 }

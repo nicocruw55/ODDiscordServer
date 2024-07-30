@@ -2,7 +2,6 @@ package com.odfin.persistence.impl;
 
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
-import com.odfin.persistence.domain.MessageType;
 import com.odfin.persistence.util.DBHelper;
 
 import java.sql.*;
@@ -15,10 +14,11 @@ public class MySqlMessageDAO implements MessageDAO {
 
     public static final String TBL_NAME = "Messages";
     public static final String COL_ID = "ID";
-    public static final String COL_USER = "UserID";
+    public static final String COL_USER = "user_ID";
+    public static final String COL_CHANNEL = "channel_ID";
     public static final String COL_CONTENT = "Content";
     public static final String COL_TIMESTAMP = "Timestamp";
-    public static final String COL_MESSAGE_TYPE = "MessageType";
+    // public static final String COL_MESSAGE_TYPE = "MessageType";
 
     public Message createMessage(ResultSet rs) throws SQLException {
         Message message = new Message();
@@ -26,7 +26,6 @@ public class MySqlMessageDAO implements MessageDAO {
         message.setSenderId(rs.getInt(COL_USER));
         message.setContent(rs.getString(COL_CONTENT));
         message.setTimestamp(rs.getTimestamp(COL_TIMESTAMP).toLocalDateTime());
-        message.setMessageType(MessageType.valueOf(rs.getString(COL_MESSAGE_TYPE)));
         return message;
     }
 
@@ -62,11 +61,11 @@ public class MySqlMessageDAO implements MessageDAO {
     public List<Message> getAllMessagesByChannelId(Integer channelId) throws SQLException {
         List<Message> messages = new ArrayList<>();
 
-        String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
+        String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_CHANNEL + " = " + channelId;
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setInt(1, channelId);
+        //stmt.setInt(1, channelId);
         ResultSet rs = stmt.executeQuery(query);
 
         while (rs.next()) messages.add(createMessage(rs));
@@ -76,7 +75,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public Message updateMessage(Message message) throws SQLException {
-        String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + COL_MESSAGE_TYPE + " = ? " + WHERE + COL_ID + " = ?";
+        String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + WHERE + COL_ID + " = ?";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -84,22 +83,22 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setInt(1, message.getSenderId());
         stmt.setString(2, message.getContent());
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
-        stmt.setString(4, message.getMessageType().name());
-        stmt.setInt(5, message.getId());
+        //stmt.setString(4, message.getMessageType().name());
+        stmt.setInt(4, message.getId());
         stmt.executeUpdate();
 
         return getMessageById(message.getId());
     }
 
     public Message insertMessage(Message message) throws SQLException {
-        String query = INSERT_INTO + TBL_NAME + " (" + COL_USER + ", " + COL_CONTENT + ", " + COL_TIMESTAMP + ", " + COL_MESSAGE_TYPE + ") " + VALUES + "(?, ?, ?, ?)";
+        String query = INSERT_INTO + TBL_NAME + " (" + COL_USER + ", " + COL_CONTENT + ", " + COL_TIMESTAMP + ") " + VALUES + "(?, ?, ?, ?)";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         stmt.setInt(1, message.getSenderId());
         stmt.setString(2, message.getContent());
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
-        stmt.setString(4, message.getMessageType().name());
+        //stmt.setString(4, message.getMessageType().name());
         stmt.executeUpdate();
 
         ResultSet rs = stmt.getGeneratedKeys();

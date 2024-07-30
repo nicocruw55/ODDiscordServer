@@ -2,11 +2,11 @@ package com.odfin.voicechat;
 
 import java.io.Serializable;
 
-public class VoiceChannelDataPacket implements Serializable {
+public class VoiceDataPacket implements Serializable {
     private byte[] data;
     private String vc;
 
-    public VoiceChannelDataPacket(byte[] data, String vc) {
+    public VoiceDataPacket(byte[] data, String vc) {
         this.data = data;
         this.vc = vc;
     }

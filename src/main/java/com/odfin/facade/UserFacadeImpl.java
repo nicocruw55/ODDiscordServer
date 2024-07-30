@@ -15,7 +15,7 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
     private final UserDAO userDAO;
 
     public UserFacadeImpl() throws RemoteException {
-        super(65301);
+        super(65300);
         this.userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
     }
 
@@ -32,6 +32,15 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
     public List<User> getAllUsers() throws RemoteException {
         try {
             return userDAO.getAllUsers();
+        } catch (SQLException e) {
+            throw new RemoteException("Error retrieving all users", e);
+        }
+    }
+
+    @Override
+    public List<User> getAllUsersFromChannel(Integer channelID) throws RemoteException {
+        try {
+            return userDAO.getAllUsersFromChannel(channelID);
         } catch (SQLException e) {
             throw new RemoteException("Error retrieving all users", e);
         }

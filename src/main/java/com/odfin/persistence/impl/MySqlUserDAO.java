@@ -55,6 +55,23 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     @Override
+    public List<User> getAllUsersFromChannel(Integer channelID) throws SQLException {
+        String query = "SELECT u.* FROM " + TBL_NAME + " u " + "JOIN ChannelMembers cm ON u." + COL_ID + " = cm.userId " + "WHERE cm.channelId = ?";
+
+        List<User> users = new ArrayList<>();
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, channelID);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            users.add(createUser(resultSet));
+        }
+
+        return users;
+    }
+
+    @Override
     public User updateUser(User user) throws SQLException {
         String query = UPDATE + TBL_NAME + SET + COL_NAME + " = ?, " + COL_PASSWORD + " = ? " + WHERE + COL_ID + " = ?";
 
