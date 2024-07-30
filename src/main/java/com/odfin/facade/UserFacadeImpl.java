@@ -54,4 +54,14 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
             throw new RemoteException("Error deleting user", e);
         }
     }
+
+    @Override
+    public User login(String username, String password) throws RemoteException {
+        try {
+            return userDAO.login(username, password);
+        } catch (SQLException e) {
+            throw new RemoteException("Error logging in", e);
+        }
+    }
+
 }
