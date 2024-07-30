@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.*;
 
 public class VoiceClient {
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = "172.19.115.113";
     private static final int SERVER_PORT = 55;
     private static String voiceChat = "uid";
 
