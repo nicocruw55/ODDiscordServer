@@ -57,4 +57,4 @@ public class ChatFacadeImpl implements ChatFacade {
         }
     }
 }
-}
+
