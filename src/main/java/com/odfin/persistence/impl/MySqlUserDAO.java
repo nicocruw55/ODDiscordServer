@@ -95,6 +95,7 @@ public class MySqlUserDAO implements UserDAO {
         return null;
     }
 
+
     public User insertUser(User user) throws SQLException {
         String query = INSERT_INTO + TBL_NAME + " (" + COL_NAME + ", " + COL_PASSWORD + ") " + VALUES + "(?, ?)";
 

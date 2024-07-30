@@ -63,4 +63,5 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
             throw new RemoteException("Error logging in", e);
         }
     }
+
 }
