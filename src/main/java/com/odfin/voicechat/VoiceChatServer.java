@@ -4,6 +4,7 @@ import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class VoiceChatServer {
     private static final int PORT = 5000;
