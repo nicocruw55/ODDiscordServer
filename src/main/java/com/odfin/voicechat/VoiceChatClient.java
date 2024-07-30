@@ -2,34 +2,63 @@ package com.odfin.voicechat;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.*;
 
 public class VoiceChatClient {
     private static final int SAMPLE_RATE = 16000;
     private static final int BUFFER_SIZE = 4096;
     private static final int PORT = 5000;
-    private static final String SERVER_ADDRESS = "172.19.115.113";
+    private static final String SERVER_ADDRESS = "localhost"; // Ersetze dies durch die Server-IP-Adresse oder Domain
 
     public static void main(String[] args) {
         AudioFormat format = new AudioFormat(SAMPLE_RATE, 16, 1, true, true);
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+        DataLine.Info infoForRecording = new DataLine.Info(TargetDataLine.class, format);
 
-        try (TargetDataLine microphone = (TargetDataLine) AudioSystem.getLine(info);
-             DatagramSocket socket = new DatagramSocket()) {
+        try (
+                TargetDataLine microphone = (TargetDataLine) AudioSystem.getLine(infoForRecording);
+                DatagramSocket sendSocket = new DatagramSocket()
+        ) {
             microphone.open(format);
             microphone.start();
 
             byte[] buffer = new byte[BUFFER_SIZE];
             InetAddress serverAddress = InetAddress.getByName(SERVER_ADDRESS);
 
-            while (true) {
-                int bytesRead = microphone.read(buffer, 0, buffer.length);
-                DatagramPacket packet = new DatagramPacket(buffer, bytesRead, serverAddress, PORT);
-                socket.send(packet);
+            System.out.println("Voice Chat Client is running...");
+
+            Thread sendThread = new Thread(() -> {
+                while (true) {
+                    try {
+                        int bytesRead = microphone.read(buffer, 0, buffer.length);
+                        DatagramPacket packet = new DatagramPacket(buffer, bytesRead, serverAddress, PORT);
+                        sendSocket.send(packet);
+                    } catch (IOException e) {
+                        System.err.println("IOException while sending data: " + e.getMessage());
+                        break; // Stop the thread if there is an exception
+                    }
+                }
+            });
+
+            sendThread.start();
+
+            // Keep the main thread alive to keep the client running
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                microphone.stop();
+                microphone.close();
+                sendSocket.close();
+                System.out.println("Voice Chat Client stopped.");
+            }));
+
+            // Keep the main thread alive to keep the client running
+            synchronized (VoiceChatClient.class) {
+                try {
+                    VoiceChatClient.class.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
-        } catch (LineUnavailableException | IOException e) {
+
+        } catch (LineUnavailableException | SocketException | UnknownHostException e) {
             e.printStackTrace();
         }
     }
