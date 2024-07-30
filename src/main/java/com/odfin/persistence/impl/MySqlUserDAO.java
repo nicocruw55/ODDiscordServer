@@ -22,6 +22,7 @@ public class MySqlUserDAO implements UserDAO {
         user.setId(rs.getInt(COL_ID));
         user.setName(rs.getString(COL_NAME));
         user.setPassword(rs.getString(COL_PASSWORD));
+
         return user;
     }
 
@@ -78,6 +79,22 @@ public class MySqlUserDAO implements UserDAO {
         return stmt.execute();
     }
 
+    public User login(String username, String password) throws SQLException {
+        String query = "SELECT * FROM " + TBL_NAME + " WHERE " + COL_NAME + " = ? AND " + COL_PASSWORD + " = ?";
+
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, username);
+        stmt.setString(2, password);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            return createUser(rs);
+        }
+
+        return null;
+    }
+
     public User insertUser(User user) throws SQLException {
         String query = INSERT_INTO + TBL_NAME + " (" + COL_NAME + ", " + COL_PASSWORD + ") " + VALUES + "(?, ?)";
 
@@ -92,6 +109,7 @@ public class MySqlUserDAO implements UserDAO {
             user.setId(resultSet.getInt(1));
             return getUserById(user.getId());
         }
+
         return null;
     }
 }
