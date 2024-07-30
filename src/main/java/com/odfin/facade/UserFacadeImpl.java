@@ -20,7 +20,7 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
     }
 
     @Override
-    public User getUserById(Integer userId) throws RemoteException {
+    public User getUserById(int userId) throws RemoteException {
         try {
             return userDAO.getUserById(userId);
         } catch (SQLException e) {
@@ -38,7 +38,7 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
     }
 
     @Override
-    public List<User> getAllUsersFromChannel(Integer channelId) throws RemoteException {
+    public List<User> getAllUsersFromChannel(int channelId) throws RemoteException {
         try {
             return userDAO.getAllUsersFromChannel(channelId);
         } catch (SQLException e) {
@@ -56,7 +56,7 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
     }
 
     @Override
-    public void deleteUser(Integer userId) throws RemoteException {
+    public void deleteUser(int userId) throws RemoteException {
         try {
             userDAO.deleteUser(userId);
         } catch (SQLException e) {

@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface UserFacade extends Remote {
 
-    User getUserById(Integer userId) throws RemoteException;
+    User getUserById(int userId) throws RemoteException;
     List<User> getAllUsers() throws RemoteException;
-    List<User> getAllUsersFromChannel(Integer channelId) throws RemoteException;
+    List<User> getAllUsersFromChannel(int channelId) throws RemoteException;
     void updateUser(User user) throws RemoteException;
-    void deleteUser(Integer userId) throws RemoteException;
+    void deleteUser(int userId) throws RemoteException;
     User login(String username, String password) throws RemoteException;
 
 }

@@ -8,7 +8,7 @@ public interface ChannelDAO {
 
     Channel getChannelbyId(int chatId) throws SQLException;
     List<Channel> getAllChannels() throws SQLException;
-    List<Channel> getAllChannelsByUserId(Integer userId) throws SQLException;
+    List<Channel> getAllChannelsByUserId(int userId) throws SQLException;
     void updateChannel(Channel channel) throws SQLException;
     void insertChannel(Channel channel) throws SQLException;
     void deleteChannel(int chatId) throws SQLException;

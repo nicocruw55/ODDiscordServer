@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface MessageDAO {
 
-    Message getMessageById(Integer messageId) throws SQLException;
+    Message getMessageById(int messageId) throws SQLException;
     List<Message> getAllMessages() throws SQLException;
-    List<Message> getAllMessagesByChannelId(Integer channelId) throws SQLException; // for chat history
-    List<Message> getAllMessagesByChannelIdLazyLoading(Integer channelId) throws SQLException; // for chat history
+    List<Message> getAllMessagesByChannelId(int channelId) throws SQLException; // for chat history
+    List<Message> getAllMessagesByChannelIdLazyLoading(int channelId) throws SQLException; // for chat history
     Message updateMessage(Message message) throws SQLException;
     Message insertMessage(Message message) throws SQLException;
-    boolean deleteMessage(Integer messageId) throws SQLException;
+    boolean deleteMessage(int messageId) throws SQLException;
 
 }

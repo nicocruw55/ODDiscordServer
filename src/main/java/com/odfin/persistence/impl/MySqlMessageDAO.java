@@ -30,7 +30,7 @@ public class MySqlMessageDAO implements MessageDAO {
     }
 
     @Override
-    public Message getMessageById(Integer messageId) throws SQLException {
+    public Message getMessageById(int messageId) throws SQLException {
         String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
         Connection conn = DBHelper.getConnection();
@@ -58,7 +58,7 @@ public class MySqlMessageDAO implements MessageDAO {
     }
 
     @Override
-    public List<Message> getAllMessagesByChannelId(Integer channelId) throws SQLException {
+    public List<Message> getAllMessagesByChannelId(int channelId) throws SQLException {
         List<Message> messages = new ArrayList<>();
 
         String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_CHANNEL + " = " + channelId;
@@ -74,7 +74,7 @@ public class MySqlMessageDAO implements MessageDAO {
     }
 
     @Override
-    public List<Message> getAllMessagesByChannelIdLazyLoading(Integer channelId) throws SQLException {
+    public List<Message> getAllMessagesByChannelIdLazyLoading(int channelId) throws SQLException {
         return null;
     }
 
@@ -115,7 +115,7 @@ public class MySqlMessageDAO implements MessageDAO {
     }
 
     @Override
-    public boolean deleteMessage(Integer id) throws SQLException {
+    public boolean deleteMessage(int id) throws SQLException {
         String query = DELETE + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
         Connection conn = DBHelper.getConnection();

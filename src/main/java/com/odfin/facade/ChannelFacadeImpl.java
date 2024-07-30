@@ -36,7 +36,7 @@ public class ChannelFacadeImpl extends UnicastRemoteObject implements ChannelFac
     }
 
     @Override
-    public List<Channel> getAllChannelsByUserId(Integer userId) throws RemoteException {
+    public List<Channel> getAllChannelsByUserId(int userId) throws RemoteException {
         try {
             return channelDAO.getAllChannelsByUserId(userId);
         } catch (SQLException e) {

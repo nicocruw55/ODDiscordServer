@@ -58,7 +58,7 @@ public class MySqlChannelDAO implements ChannelDAO {
     }
 
     @Override
-    public List<Channel> getAllChannelsByUserId(Integer userId) throws SQLException {
+    public List<Channel> getAllChannelsByUserId(int userId) throws SQLException {
         String query = "SELECT c.* FROM " + TBL_NAME + " c " + "JOIN ChannelMembers cm ON c." + COL_ID + " = cm.channelId " + "WHERE cm.userId = ?";
 
         List<Channel> channels = new ArrayList<>();

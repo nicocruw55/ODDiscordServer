@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface MessageFacade extends Remote{
 
-    Message getMessageById(Integer messageId) throws RemoteException;
+    Message getMessageById(int messageId) throws RemoteException;
     List<Message> getAllMessages() throws RemoteException;
-    List<Message> getAllMessagesByChannelId(Integer channelId) throws RemoteException; // for chat history
+    List<Message> getAllMessagesByChannelId(int channelId) throws RemoteException; // for chat history
     void updateMessage(Message message) throws RemoteException;
-    void deleteMessage(Integer messageId) throws RemoteException;
-    void sendMessage(String content, Integer senderId, Integer chatId) throws RemoteException;
+    void deleteMessage(int messageId) throws RemoteException;
+    void sendMessage(String content, int senderId, int chatId) throws RemoteException;
 
 }

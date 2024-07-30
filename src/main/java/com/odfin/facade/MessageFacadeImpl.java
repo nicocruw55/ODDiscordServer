@@ -19,7 +19,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public Message getMessageById(Integer messageId) throws RemoteException {
+    public Message getMessageById(int messageId) throws RemoteException {
         try {
             return messageDAO.getMessageById(messageId);
         } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public List<Message> getAllMessagesByChannelId(Integer channelId) throws RemoteException {
+    public List<Message> getAllMessagesByChannelId(int channelId) throws RemoteException {
         try {
             return messageDAO.getAllMessagesByChannelId(channelId);
         } catch (SQLException e) {
@@ -55,7 +55,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public void deleteMessage(Integer messageId) throws RemoteException {
+    public void deleteMessage(int messageId) throws RemoteException {
         try {
             messageDAO.deleteMessage(messageId);
         } catch (SQLException e) {
@@ -64,7 +64,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public void sendMessage(String content, Integer senderId, Integer chatId) throws RemoteException {
+    public void sendMessage(String content, int senderId, int chatId) throws RemoteException {
 
     }
 
