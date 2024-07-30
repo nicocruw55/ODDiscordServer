@@ -13,4 +13,5 @@ public interface UserDAO {
     User insertUser(User user) throws SQLException;
     boolean deleteUser(Integer userId) throws SQLException;
     User login(String username, String password) throws SQLException;
+
 }
