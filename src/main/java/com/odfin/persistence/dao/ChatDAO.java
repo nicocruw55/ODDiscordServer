@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ChatDAO {
+
     Chat getChatbyID(int chatID) throws SQLException;
     List<Chat> getAllChats() throws SQLException;
     void updateChat(Chat chat) throws SQLException;

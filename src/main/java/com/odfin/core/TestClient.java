@@ -17,7 +17,8 @@ public class TestClient {
         Registry registry = LocateRegistry.getRegistry("cruw-community.de", Registry.REGISTRY_PORT);
         ServerFacade s = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName());
         UserFacade m = s.getUserFacade();
-        //List<Message> ms = m.getAllMessages();
+        MessageFacade messageFacade = s.getMessageFacade();
+
 
     }
 }

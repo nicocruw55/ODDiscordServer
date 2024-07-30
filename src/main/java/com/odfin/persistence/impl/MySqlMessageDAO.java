@@ -59,6 +59,22 @@ public class MySqlMessageDAO implements MessageDAO {
     }
 
     @Override
+    public List<Message> getAllMessagesByChannelId(Integer channelId) throws SQLException {
+        List<Message> messages = new ArrayList<>();
+
+        String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
+
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, channelId);
+        ResultSet rs = stmt.executeQuery(query);
+
+        while (rs.next()) messages.add(createMessage(rs));
+
+        return messages;
+    }
+
+    @Override
     public Message updateMessage(Message message) throws SQLException {
         String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + COL_MESSAGE_TYPE + " = ? " + WHERE + COL_ID + " = ?";
 

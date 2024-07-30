@@ -3,6 +3,7 @@ package com.odfin.facade;
 
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
+import com.odfin.persistence.domain.User;
 import com.odfin.persistence.factory.DAOFactory;
 import com.odfin.persistence.impl.MySqlMessageDAO;
 
@@ -57,4 +58,11 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
             throw new RemoteException("Error deleting message", e);
         }
     }
+
+    @Override
+    public void sendMessage(String content, Integer senderId, Integer chatId) throws RemoteException {
+
+    }
+
+
 }
