@@ -11,8 +11,7 @@ public class User implements Serializable {
     private int statusId;
     private String status;
 
-    public User(){
-
+    public User() {
     }
 
     public User(int id, String name, String password, String status, int statusId) {
@@ -78,10 +77,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return "User{" + "id=" + id + ", name='" + name + '\'' + ", password='" + password + '\'' + '}';
     }
 }

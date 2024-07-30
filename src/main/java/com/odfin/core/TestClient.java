@@ -26,6 +26,5 @@ public class TestClient {
         System.out.println(messageFacade.getAllMessagesByChannelId(1));
         System.out.println(channelFacade.getAllChannelsByUserId(1));
 
-
     }
 }
