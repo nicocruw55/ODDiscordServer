@@ -11,7 +11,7 @@ public interface UserFacade extends Remote {
 
     User getUserById(Integer userId) throws RemoteException;
     List<User> getAllUsers() throws RemoteException;
-    List<User> getAllUsersFromChannel(Integer channelID) throws RemoteException;
+    List<User> getAllUsersFromChannel(Integer channelId) throws RemoteException;
     void updateUser(User user) throws RemoteException;
     void deleteUser(Integer userId) throws RemoteException;
     User login(String username, String password) throws RemoteException;

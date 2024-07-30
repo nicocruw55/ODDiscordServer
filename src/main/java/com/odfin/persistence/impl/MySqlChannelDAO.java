@@ -26,7 +26,7 @@ public class MySqlChannelDAO implements ChannelDAO {
     }
 
     @Override
-    public Channel getChannelbyID(int id) throws SQLException {
+    public Channel getChannelbyId(int id) throws SQLException {
         String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
         Connection connection = DBHelper.getConnection();

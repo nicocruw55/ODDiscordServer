@@ -19,9 +19,9 @@ public class ChannelFacadeImpl extends UnicastRemoteObject implements ChannelFac
     }
 
     @Override
-    public Channel getChannelByID(int chatID) throws RemoteException {
+    public Channel getChannelById(int chatId) throws RemoteException {
         try {
-            return channelDAO.getChannelbyID(chatID);
+            return channelDAO.getChannelbyId(chatId);
         } catch (SQLException e) {
             throw new RemoteException("Error retrieving chat", e);
         }

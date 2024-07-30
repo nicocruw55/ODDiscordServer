@@ -74,6 +74,11 @@ public class MySqlMessageDAO implements MessageDAO {
     }
 
     @Override
+    public List<Message> getAllMessagesByChannelIdLazyLoading(Integer channelId) throws SQLException {
+        return null;
+    }
+
+    @Override
     public Message updateMessage(Message message) throws SQLException {
         String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + WHERE + COL_ID + " = ?";
 

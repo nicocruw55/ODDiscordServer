@@ -38,9 +38,9 @@ public class UserFacadeImpl extends UnicastRemoteObject implements UserFacade {
     }
 
     @Override
-    public List<User> getAllUsersFromChannel(Integer channelID) throws RemoteException {
+    public List<User> getAllUsersFromChannel(Integer channelId) throws RemoteException {
         try {
-            return userDAO.getAllUsersFromChannel(channelID);
+            return userDAO.getAllUsersFromChannel(channelId);
         } catch (SQLException e) {
             throw new RemoteException("Error retrieving all users", e);
         }

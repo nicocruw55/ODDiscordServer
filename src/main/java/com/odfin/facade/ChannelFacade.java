@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ChannelFacade extends Remote {
 
-    Channel getChannelByID(int chatID) throws RemoteException;
+    Channel getChannelById(int chatId) throws RemoteException;
     List<Channel> getAllChannels() throws RemoteException;
     List<Channel> getAllChannelsByUserId(Integer userId) throws RemoteException;
     void updateChannel(Channel channel) throws RemoteException;
     void insertChannel(Channel channel) throws RemoteException;
-    void deleteChannel(int chatID) throws RemoteException;
+    void deleteChannel(int chatId) throws RemoteException;
 
 }

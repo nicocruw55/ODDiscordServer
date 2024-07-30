@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Message implements Serializable {
 
     private Integer id;
-    private Integer senderID;
+    private Integer senderId;
     private String content;
     private LocalDateTime timestamp;
     //private MessageType messageType;
@@ -15,9 +15,9 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(Integer id, Integer senderID, String content, LocalDateTime timestamp) {
+    public Message(Integer id, Integer senderId, String content, LocalDateTime timestamp) {
         this.id = id;
-        this.senderID = senderID;
+        this.senderId = senderId;
         this.content = content;
         this.timestamp = timestamp;
         //this.messageType = messageType;
@@ -32,11 +32,11 @@ public class Message implements Serializable {
     }
 
     public Integer getSenderId() {
-        return senderID;
+        return senderId;
     }
 
-    public void setSenderId(Integer senderID) {
-        this.senderID = senderID;
+    public void setSenderId(Integer senderId) {
+        this.senderId = senderId;
     }
 
     public String getContent() {
@@ -80,7 +80,7 @@ public class Message implements Serializable {
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", sender=" + senderID +
+                ", sender=" + senderId +
                 ", content='" + content + '\'' +
                 ", timestamp=" + timestamp +
                 //", messageType=" + messageType +
