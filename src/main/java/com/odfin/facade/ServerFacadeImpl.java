@@ -5,7 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerFacadeImpl implements ServerFacade{
+public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacade{
 
     private static MessageFacade messageFacade;
     private static UserFacade userFacade;
@@ -13,7 +13,7 @@ public class ServerFacadeImpl implements ServerFacade{
     private List<ClientFacade> clients;
 
     public ServerFacadeImpl() throws RemoteException {
-        super();
+        super(65300);
         clients = new ArrayList<>();
     }
 

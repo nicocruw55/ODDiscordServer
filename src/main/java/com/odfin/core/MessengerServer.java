@@ -22,11 +22,8 @@ public class MessengerServer {
             // Erstelle die Implementierung des ServerFacade
             ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
 
-            // Exportiere das ServerFacade-Objekt
-            ServerFacade serverFacade = (ServerFacade) UnicastRemoteObject.exportObject(serverFacadeImpl, 0);
-
             // Binde das ServerFacade-Objekt an die Registry
-            registry.rebind(ServerFacade.class.getSimpleName(), serverFacade);
+            registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
 
             System.out.println("ServerFacade bound to registry and ready.");
 
