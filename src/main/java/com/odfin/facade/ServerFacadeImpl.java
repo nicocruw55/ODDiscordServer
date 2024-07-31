@@ -54,6 +54,9 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
     }
 
     public boolean registerClient2(String ip, int port) throws RemoteException, NotBoundException {
+        System.out.println("registering...");
+        System.out.println("ip: " + ip);
+        System.out.println("port: " + port);
         System.out.println("getting registry...");
         Registry registry = LocateRegistry.getRegistry(ip, port);
         System.out.println("registry lookup...");

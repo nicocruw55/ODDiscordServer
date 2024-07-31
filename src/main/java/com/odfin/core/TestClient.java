@@ -30,7 +30,7 @@ public class TestClient {
         String localIp = InetAddress.getLocalHost().getHostAddress();
         int localPort = Registry.REGISTRY_PORT;
         System.out.println(localIp);
-        serverFacade.registerClient2(localIp, localPort);
+        serverFacade.registerClient2("62.154.245.209", localPort);
 
         // Hole die Facades vom Server
         UserFacade userFacade = serverFacade.getUserFacade();
