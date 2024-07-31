@@ -13,7 +13,7 @@ public class MessengerServer {
     public static void main(String[] args) {
         try {
             // Setze den Hostnamen für die RMI-Server
-            System.setProperty("java.rmi.server.hostname", "localhost");
+            System.setProperty("java.rmi.server.hostname", "cruw-community.de");
 
             // Erstelle oder bekomme die RMI-Registry
             Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
