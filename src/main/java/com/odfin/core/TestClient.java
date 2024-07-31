@@ -17,20 +17,20 @@ public class TestClient {
         // Client RMI
         ClientFacadeImpl clientFacade = new ClientFacadeImpl();
         ClientFacade stub = (ClientFacade) UnicastRemoteObject.exportObject(clientFacade, 99);
-        Registry clientRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-        clientRegistry.rebind("cc", stub);
+        Registry clientRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT );
+        clientRegistry.rebind(ClientFacade.class.getSimpleName(), stub);
         System.out.println("Client-Registry gestartet und Client-Service registriert.");
 
         // Server RMI
-        Registry registry = LocateRegistry.getRegistry("cruw-community.de", Registry.REGISTRY_PORT);
+        Registry registry = LocateRegistry.getRegistry("localhost", Registry.REGISTRY_PORT + 1);
         ServerFacade serverFacade = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName());
         System.out.println("ServerFacade gefunden: " + serverFacade);
 
         // register test
-        String localIp = InetAddress.getLocalHost().getHostAddress();
-        int localPort = Registry.REGISTRY_PORT;
-        System.out.println(localIp);
-        serverFacade.registerClient2("62.154.245.209", localPort);
+        serverFacade.registerClient(clientFacade);
+        //String localIp = InetAddress.getLocalHost().getHostAddress();
+        //int localPort = Registry.REGISTRY_PORT;
+        //serverFacade.registerClient2(localIp, localPort);
 
         // Hole die Facades vom Server
         UserFacade userFacade = serverFacade.getUserFacade();

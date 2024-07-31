@@ -1,6 +1,7 @@
 package com.odfin.facade;
 
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -44,10 +45,10 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
         return channelFacade;
     }
 
-    public void registerClient(ClientFacade client) throws RemoteException {
+    public void registerClient(Remote client) throws RemoteException {
         System.out.println("Registering client...");
         if (client != null) {
-            clients.add(client);
+            clients.add((ClientFacade) client);
             System.out.println("Client registered.");
             notifyClients("Hello Client!!");
         }
