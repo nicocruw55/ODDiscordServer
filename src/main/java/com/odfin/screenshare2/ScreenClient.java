@@ -11,7 +11,7 @@ import java.net.Socket;
 
 public class ScreenClient {
 
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = "cruw-community.de";
     private static final int PORT = 500;
 
     public static void main(String[] args) throws IOException, AWTException {

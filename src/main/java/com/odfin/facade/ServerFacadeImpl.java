@@ -2,15 +2,19 @@ package com.odfin.facade;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerFacadeImpl implements ServerFacade{
 
     private static MessageFacade messageFacade;
     private static UserFacade userFacade;
     private static ChannelFacade channelFacade;
+    private List<ClientFacade> clients;
 
     public ServerFacadeImpl() throws RemoteException {
         super();
+        clients = new ArrayList<>();
     }
 
     @Override
@@ -35,5 +39,31 @@ public class ServerFacadeImpl implements ServerFacade{
             channelFacade = new ChannelFacadeImpl();
 
         return channelFacade;
+    }
+
+    public void registerClient(ClientFacade client) throws RemoteException {
+        if (client != null) {
+            clients.add(client);
+            System.out.println("Client registered.");
+            notifyClients("Hello Client!!");
+        }
+    }
+
+    public void unregisterClient(ClientFacade client) throws RemoteException {
+        if (client != null) {
+            clients.remove(client);
+            System.out.println("Client unregistered.");
+        }
+    }
+
+    public void notifyClients(String message) throws RemoteException {
+        System.out.println("Sending message to client: " + message);
+        for (ClientFacade client : clients) {
+            try {
+                client.receiveNotification(message);
+            } catch (RemoteException e) {
+                System.out.println("Failed to notify client: " + e.getMessage());
+            }
+        }
     }
 }
