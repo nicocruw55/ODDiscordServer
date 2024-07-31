@@ -6,36 +6,36 @@ import java.util.Objects;
 
 public class Message implements Serializable {
 
-    private Integer id;
-    private Integer senderId;
+    private int id;
+    private int senderId;
+    private int channelId;
     private String content;
     private LocalDateTime timestamp;
-    //private MessageType messageType;
 
     public Message() {
     }
 
-    public Message(Integer id, Integer senderId, String content, LocalDateTime timestamp) {
+    public Message(int id, int senderId, int channelId, String content, LocalDateTime timestamp) {
         this.id = id;
+        this.channelId = channelId;
         this.senderId = senderId;
         this.content = content;
         this.timestamp = timestamp;
-        //this.messageType = messageType;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getSenderId() {
+    public int getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(Integer senderId) {
+    public void setSenderId(int senderId) {
         this.senderId = senderId;
     }
 
@@ -55,13 +55,13 @@ public class Message implements Serializable {
         this.timestamp = timestamp;
     }
 
-    //public MessageType getMessageType() {
-    //    return messageType;
-    //}
+    public int getChannelId() {
+        return channelId;
+    }
 
-    //public void setMessageType(MessageType messageType) {
-    //    this.messageType = messageType;
-    //}
+    public void setChannelId(int chatId) {
+        this.channelId = chatId;
+    }
 
     @Override
     public boolean equals(Object o) {

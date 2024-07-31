@@ -5,6 +5,7 @@ import com.odfin.persistence.domain.Message;
 import com.odfin.persistence.util.DBHelper;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +19,12 @@ public class MySqlMessageDAO implements MessageDAO {
     public static final String COL_CHANNEL = "channel_ID";
     public static final String COL_CONTENT = "Content";
     public static final String COL_TIMESTAMP = "Timestamp";
-    // public static final String COL_MESSAGE_TYPE = "MessageType";
 
     public Message createMessage(ResultSet rs) throws SQLException {
         Message message = new Message();
         message.setId(rs.getInt(COL_ID));
         message.setSenderId(rs.getInt(COL_USER));
+        message.setChannelId(rs.getInt(COL_CHANNEL));
         message.setContent(rs.getString(COL_CONTENT));
         message.setTimestamp(rs.getTimestamp(COL_TIMESTAMP).toLocalDateTime());
         return message;
@@ -65,7 +66,6 @@ public class MySqlMessageDAO implements MessageDAO {
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
-        //stmt.setInt(1, channelId);
         ResultSet rs = stmt.executeQuery(query);
 
         while (rs.next()) messages.add(createMessage(rs));
@@ -80,7 +80,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public Message updateMessage(Message message) throws SQLException {
-        String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + WHERE + COL_ID + " = ?";
+        String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + COL_CHANNEL + " = ?, " + WHERE + COL_ID + " = ?";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -88,22 +88,22 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setInt(1, message.getSenderId());
         stmt.setString(2, message.getContent());
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
-        //stmt.setString(4, message.getMessageType().name());
-        stmt.setInt(4, message.getId());
+        stmt.setInt(4, message.getChannelId());
+        stmt.setInt(5, message.getId());
         stmt.executeUpdate();
 
         return getMessageById(message.getId());
     }
 
     public Message insertMessage(Message message) throws SQLException {
-        String query = INSERT_INTO + TBL_NAME + " (" + COL_USER + ", " + COL_CONTENT + ", " + COL_TIMESTAMP + ") " + VALUES + "(?, ?, ?, ?)";
+        String query = INSERT_INTO + TBL_NAME + " (" + COL_USER + ", " + COL_CONTENT + ", " + COL_TIMESTAMP + ", " + COL_CHANNEL + ") " + VALUES + "(?, ?, ?, ?)";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         stmt.setInt(1, message.getSenderId());
         stmt.setString(2, message.getContent());
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
-        //stmt.setString(4, message.getMessageType().name());
+        stmt.setInt(4, message.getChannelId());
         stmt.executeUpdate();
 
         ResultSet rs = stmt.getGeneratedKeys();
@@ -111,6 +111,7 @@ public class MySqlMessageDAO implements MessageDAO {
             message.setId(rs.getInt(1));
             return getMessageById(message.getId());
         }
+
         return null;
     }
 
@@ -123,5 +124,16 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setInt(1, id);
 
         return stmt.execute();
+    }
+
+    @Override
+    public Message sendMessage(String content, int senderId, int channelId) throws SQLException {
+        Message message = new Message();
+        message.setContent(content);
+        message.setChannelId(channelId);
+        message.setSenderId(senderId);
+        message.setTimestamp(LocalDateTime.now());
+
+        return insertMessage(message);
     }
 }

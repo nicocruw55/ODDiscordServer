@@ -5,7 +5,6 @@ import java.io.*;
 public class ScreenClientHandler {
     public ObjectOutputStream output;
     private ObjectInputStream in;
-    public String voiceChatID = "";
 
     public ScreenClientHandler(java.net.Socket socket) throws Exception {
         this.output = new ObjectOutputStream(socket.getOutputStream());
@@ -16,11 +15,9 @@ public class ScreenClientHandler {
                 try{
                     byte[] d = (byte[]) in.readObject();
                     for(ScreenClientHandler s : ScreenServer.clientHandlers){
-                        //if(v == this) continue;
-                        //if(v.voiceChatID.equals(voiceChatID)){
+                        if(s == this) continue;
                         s.output.writeObject(d);
                         s.output.flush();
-                        //}
                     }
                 }
                 catch (Exception e){

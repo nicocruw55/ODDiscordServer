@@ -64,8 +64,12 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public void sendMessage(String content, int senderId, int chatId) throws RemoteException {
-
+    public Message sendMessage(String content, int senderId, int channelId) throws RemoteException {
+        try {
+            return messageDAO.sendMessage(content, senderId, channelId);
+        } catch (SQLException e) {
+            throw new RemoteException("Error sending message", e);
+        }
     }
 
 

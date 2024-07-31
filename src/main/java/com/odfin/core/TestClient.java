@@ -22,6 +22,9 @@ public class TestClient {
         MessageFacade messageFacade = s.getMessageFacade();
         ChannelFacade channelFacade = s.getChannelFacade();
 
+       // messageFacade.sendMessage("Pipi auf Mischa", 1, 1);
+        messageFacade.sendMessage("Dennis macht Pipi auf Nico", 2, 2);
+
         System.out.println(userFacade.getAllUsers());
         System.out.println(messageFacade.getAllMessagesByChannelId(1));
         System.out.println(channelFacade.getAllChannelsByUserId(1));
