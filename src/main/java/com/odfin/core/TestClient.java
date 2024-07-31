@@ -22,7 +22,7 @@ public class TestClient {
         System.out.println("Client-Registry gestartet und Client-Service registriert.");
 
         // Server RMI
-        Registry registry = LocateRegistry.getRegistry("localhost", Registry.REGISTRY_PORT + 1);
+        Registry registry = LocateRegistry.getRegistry("cruw-community.de", Registry.REGISTRY_PORT);
         ServerFacade serverFacade = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName());
         System.out.println("ServerFacade gefunden: " + serverFacade);
 
