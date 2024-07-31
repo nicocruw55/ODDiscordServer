@@ -6,7 +6,6 @@ import java.rmi.server.UnicastRemoteObject;
 public class ClientFacadeImpl implements ClientFacade{
 
     public ClientFacadeImpl() throws RemoteException {
-        //super();
     }
 
     @Override

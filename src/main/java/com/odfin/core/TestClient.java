@@ -17,12 +17,12 @@ public class TestClient {
         // Client RMI
         ClientFacadeImpl clientFacade = new ClientFacadeImpl();
         ClientFacade stub = (ClientFacade) UnicastRemoteObject.exportObject(clientFacade, 0);
-        Registry clientRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT );
+        Registry clientRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT+1);
         clientRegistry.rebind(ClientFacade.class.getSimpleName(), stub);
         System.out.println("Client-Registry gestartet und Client-Service registriert.");
 
         // Server RMI
-        Registry registry = LocateRegistry.getRegistry("cruw-community.de", Registry.REGISTRY_PORT);
+        Registry registry = LocateRegistry.getRegistry("172.19.115.113", Registry.REGISTRY_PORT);
         ServerFacade serverFacade = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName());
         System.out.println("ServerFacade gefunden: " + serverFacade);
 

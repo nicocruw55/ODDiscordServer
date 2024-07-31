@@ -51,6 +51,12 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
             clients.add((ClientFacade) client);
             System.out.println("Client registered.");
             notifyClients("Hello Client!!");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            notifyClients("Hello Client!!");
         }
     }
 
