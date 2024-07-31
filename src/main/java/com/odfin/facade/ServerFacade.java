@@ -1,5 +1,6 @@
 package com.odfin.facade;
 
+import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -10,6 +11,6 @@ public interface ServerFacade extends Remote {
     ChannelFacade getChannelFacade() throws RemoteException;
     void registerClient(ClientFacade client) throws RemoteException;
     void unregisterClient(ClientFacade client) throws RemoteException;
-    boolean registerClient2() throws RemoteException;
+    boolean registerClient2(String ip, int port) throws RemoteException, NotBoundException;
 
 }
