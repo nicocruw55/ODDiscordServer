@@ -16,7 +16,7 @@ public class TestClient {
 
         // Client RMI
         ClientFacadeImpl clientFacade = new ClientFacadeImpl();
-        ClientFacade stub = (ClientFacade) UnicastRemoteObject.exportObject(clientFacade, 99);
+        ClientFacade stub = (ClientFacade) UnicastRemoteObject.exportObject(clientFacade, 0);
         Registry clientRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT );
         clientRegistry.rebind(ClientFacade.class.getSimpleName(), stub);
         System.out.println("Client-Registry gestartet und Client-Service registriert.");
@@ -27,7 +27,7 @@ public class TestClient {
         System.out.println("ServerFacade gefunden: " + serverFacade);
 
         // register test
-        serverFacade.registerClient(clientFacade);
+        serverFacade.registerClient(stub);
         //String localIp = InetAddress.getLocalHost().getHostAddress();
         //int localPort = Registry.REGISTRY_PORT;
         //serverFacade.registerClient2(localIp, localPort);
