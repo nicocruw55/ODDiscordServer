@@ -50,6 +50,11 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
         }
     }
 
+    public boolean registerClient2() throws RemoteException {
+        System.out.println("Registering client...");
+        return true;
+    }
+
     public void unregisterClient(ClientFacade client) throws RemoteException {
         if (client != null) {
             clients.remove(client);

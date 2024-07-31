@@ -10,5 +10,6 @@ public interface ServerFacade extends Remote {
     ChannelFacade getChannelFacade() throws RemoteException;
     void registerClient(ClientFacade client) throws RemoteException;
     void unregisterClient(ClientFacade client) throws RemoteException;
+    boolean registerClient2() throws RemoteException;
 
 }
