@@ -18,5 +18,4 @@ public interface MessageDAO {
     boolean deleteMessage(int messageId) throws SQLException;
     Message sendMessage(String content, int senderId, int channelId) throws SQLException;
 
-
 }
