@@ -34,12 +34,14 @@ public class MySqlUserDAO implements UserDAO {
     public User getUserById(int userId) throws SQLException {
         String query = SELECT + " * FROM " + TBL_NAME + " WHERE " + COL_ID + " = ?";
 
-        try (Connection connection = DBHelper.getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, userId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) return createUser(resultSet);
-            }
-        }
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, userId);
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next())
+            return createUser(resultSet);
+
         return null;
     }
 
@@ -48,9 +50,13 @@ public class MySqlUserDAO implements UserDAO {
         String query = SELECT + " * FROM " + TBL_NAME;
 
         List<User> users = new ArrayList<>();
-        try (Connection connection = DBHelper.getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()) users.add(createUser(resultSet));
-        }
+        Connection connection = DBHelper.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+
+        while (resultSet.next())
+            users.add(createUser(resultSet));
+
         return users;
     }
 
@@ -59,12 +65,14 @@ public class MySqlUserDAO implements UserDAO {
         String query = "SELECT u.* FROM " + TBL_NAME + " u JOIN ChannelMembers cm ON u." + COL_ID + " = cm.userId WHERE cm.channelId = ?";
 
         List<User> users = new ArrayList<>();
-        try (Connection connection = DBHelper.getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, channelId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) users.add(createUser(resultSet));
-            }
-        }
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, channelId);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next())
+            users.add(createUser(resultSet));
+
         return users;
     }
 
@@ -72,14 +80,15 @@ public class MySqlUserDAO implements UserDAO {
     public User updateUser(User user) throws SQLException {
         String query = UPDATE + TBL_NAME + " SET " + COL_NAME + " = ?, " + COL_PASSWORD + " = ?, " + COL_STATUS_TEXT + " = ?, " + COL_STATUS_ID + " = ? " + WHERE + COL_ID + " = ?";
 
-        try (Connection connection = DBHelper.getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getStatus());
-            statement.setInt(4, user.getStatusId());
-            statement.setInt(5, user.getId());
-            statement.executeUpdate();
-        }
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getPassword());
+        statement.setString(3, user.getStatus());
+        statement.setInt(4, user.getStatusId());
+        statement.setInt(5, user.getId());
+        statement.executeUpdate();
+
         return getUserById(user.getId());
     }
 
@@ -87,44 +96,45 @@ public class MySqlUserDAO implements UserDAO {
     public boolean deleteUser(int id) throws SQLException {
         String query = DELETE + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
-        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
-            return stmt.execute();
-        }
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setInt(1, id);
+        return stmt.execute();
+
     }
 
     public User login(String username, String password) throws SQLException {
         String query = "SELECT * FROM " + TBL_NAME + " WHERE " + COL_NAME + " = ? AND " + COL_PASSWORD + " = ?";
 
-        try (Connection conn = DBHelper.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return createUser(rs);
-                }
-            }
-        }
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, username);
+        stmt.setString(2, password);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next())
+            return createUser(rs);
+
         return null;
     }
 
     public User insertUser(User user) throws SQLException {
         String query = INSERT_INTO + TBL_NAME + " (" + COL_NAME + ", " + COL_PASSWORD + ", " + COL_STATUS_TEXT + ", " + COL_STATUS_ID + ") " + VALUES + "(?, ?, ?, ?)";
 
-        try (Connection connection = DBHelper.getConnection(); PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getStatus());
-            statement.setInt(4, user.getStatusId());
-            statement.executeUpdate();
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getPassword());
+        statement.setString(3, user.getStatus());
+        statement.setInt(4, user.getStatusId());
+        statement.executeUpdate();
 
-            try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                if (resultSet.next()) {
-                    user.setId(resultSet.getInt(1));
-                    return getUserById(user.getId());
-                }
-            }
+        ResultSet resultSet = statement.getGeneratedKeys();
+        if (resultSet.next()) {
+            user.setId(resultSet.getInt(1));
+            return getUserById(user.getId());
         }
+
         return null;
     }
 }

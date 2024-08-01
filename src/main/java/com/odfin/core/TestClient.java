@@ -14,30 +14,23 @@ public class TestClient {
     public static void main(String[] args) throws RemoteException, NotBoundException, UnknownHostException {
         System.out.println("Starte TestClient...");
 
-        // Client RMI
-        ClientFacadeImpl clientFacade = new ClientFacadeImpl();
-        ClientFacade stub = (ClientFacade) UnicastRemoteObject.exportObject(clientFacade, 0);
-        Registry clientRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT+1);
-        clientRegistry.rebind(ClientFacade.class.getSimpleName(), stub);
-        System.out.println("Client-Registry gestartet und Client-Service registriert.");
-
         // Server RMI
         Registry registry = LocateRegistry.getRegistry("172.19.115.113", Registry.REGISTRY_PORT);
-        ServerFacade serverFacade = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName());
-        System.out.println("ServerFacade gefunden: " + serverFacade);
+        ServerFacade serverFacade = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName()); 
+        System.out.println("found server facade: " + serverFacade);
 
-        // register test
+        // Client remote object
+        ClientFacadeImpl clientFacade = new ClientFacadeImpl();
+        ClientFacade stub = (ClientFacade) UnicastRemoteObject.exportObject(clientFacade, 0);
         serverFacade.registerClient(stub);
-        //String localIp = InetAddress.getLocalHost().getHostAddress();
-        //int localPort = Registry.REGISTRY_PORT;
-        //serverFacade.registerClient2(localIp, localPort);
+        System.out.println("client registered");
 
-        // Hole die Facades vom Server
+        // get some facades
         UserFacade userFacade = serverFacade.getUserFacade();
         MessageFacade messageFacade = serverFacade.getMessageFacade();
         ChannelFacade channelFacade = serverFacade.getChannelFacade();
 
-        // Führe Operationen aus
+        // test facades
         messageFacade.sendMessage("Dennis macht Pipi auf Nico", 2, 2);
         System.out.println(userFacade.getAllUsers());
         System.out.println(messageFacade.getAllMessagesByChannelId(1));
