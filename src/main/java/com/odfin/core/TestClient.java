@@ -15,7 +15,7 @@ public class TestClient {
         System.out.println("Starte TestClient...");
 
         // Server RMI
-        Registry registry = LocateRegistry.getRegistry("172.19.115.113", Registry.REGISTRY_PORT);
+        Registry registry = LocateRegistry.getRegistry("localhost", Registry.REGISTRY_PORT);
         ServerFacade serverFacade = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName()); 
         System.out.println("found server facade: " + serverFacade);
 

@@ -10,17 +10,19 @@ public class Message implements Serializable {
     private int senderId;
     private int channelId;
     private String content;
+    private String name;
     private LocalDateTime timestamp;
 
     public Message() {
     }
 
-    public Message(int id, int senderId, int channelId, String content, LocalDateTime timestamp) {
+    public Message(int id, int senderId, int channelId, String content, String name, LocalDateTime timestamp) {
         this.id = id;
         this.channelId = channelId;
         this.senderId = senderId;
         this.content = content;
         this.timestamp = timestamp;
+        this.name = name;
     }
 
     public int getId() {
@@ -63,6 +65,14 @@ public class Message implements Serializable {
         this.channelId = chatId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,7 +93,7 @@ public class Message implements Serializable {
                 ", sender=" + senderId +
                 ", content='" + content + '\'' +
                 ", timestamp=" + timestamp +
-                //", messageType=" + messageType +
+                ", name =" + name +
                 '}';
     }
 
