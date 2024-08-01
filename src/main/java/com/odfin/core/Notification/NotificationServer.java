@@ -12,7 +12,7 @@ public class NotificationServer {
     private static final int PORT = 5000;
     private static List<Socket> clientSockets = Collections.synchronizedList(new ArrayList<>());
 
-    public static void main(String[] args) throws IOException {
+    public NotificationServer() throws IOException {
         ServerSocket serverSocket = new ServerSocket(PORT);
         System.out.println("notification server startet on port " + PORT);
 
