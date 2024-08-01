@@ -28,7 +28,7 @@ public class MessengerServer {
         ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
         registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
         System.out.println("Messenger RMI registry created...");
-        NotificationServer.notifyClients("Test notification...");
+        NotificationServer.notifyClients("Test notification...", 1);
     }
 
 }

@@ -16,7 +16,7 @@ public class TestClient {
         new Thread(() -> {
             while (true) {
                 try {
-                    new NotificationClient();
+                    new NotificationClient(1);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -36,10 +36,7 @@ public class TestClient {
         ChannelFacade channelFacade = serverFacade.getChannelFacade();
 
         // test facades
-        messageFacade.sendMessage("KAKAKAIAKAIAKAIAKAIAKAIAK", 2, 2);
-        System.out.println(userFacade.getAllUsers());
-        System.out.println(messageFacade.getAllMessagesByChannelId(2));
-        System.out.println(channelFacade.getAllChannelsByUserId(1));
+        messageFacade.sendMessage("KAKAKAIAKAIAKAIAKAIAKAIAK", 1, 1);
 
     }
 

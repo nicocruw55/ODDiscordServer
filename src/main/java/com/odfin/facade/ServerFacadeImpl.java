@@ -47,15 +47,15 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
         return channelFacade;
     }
 
+    @Override
     public void registerClient(Remote client) throws RemoteException {
         System.out.println("Registering client...");
-        NotificationServer.notifyClients("Test notification");
         if (client != null) {
             clients.add((ClientFacade) client);
-            notifyClients("Hello Client!!");
         }
     }
 
+    @Override
     public void unregisterClient(ClientFacade client) throws RemoteException {
         if (client != null) {
             clients.remove(client);
@@ -63,14 +63,4 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
         }
     }
 
-    public void notifyClients(String message) throws RemoteException {
-        System.out.println("Sending message to client: " + message);
-        for (ClientFacade client : clients) {
-            try {
-                client.receiveNotification(message);
-            } catch (RemoteException e) {
-                System.out.println("Failed to notify client: " + e.getMessage());
-            }
-        }
-    }
 }

@@ -115,7 +115,7 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setInt(4, message.getChannelId());
         stmt.executeUpdate();
 
-        NotificationServer.notifyClients("A Message was inserted!!!");
+        NotificationServer.notifyClients("A Message was inserted in channel id: " + message.getChannelId(), message.getChannelId());
 
         ResultSet rs = stmt.getGeneratedKeys();
         if (rs.next()) {
@@ -139,6 +139,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public Message sendMessage(String content, int senderId, int channelId) throws SQLException {
+        System.out.println("Sending message...");
         Message message = new Message();
         message.setContent(content);
         message.setChannelId(channelId);
