@@ -1,5 +1,6 @@
 package com.odfin.screenshare2;
 
+import com.odfin.persistence.util.ServerHelper;
 import com.odfin.voicechat.VoiceDataPacket;
 
 import javax.imageio.ImageIO;
@@ -11,7 +12,7 @@ import java.net.Socket;
 
 public class ScreenClient {
 
-    private static final String SERVER_ADDRESS = "cruw-community.de";
+    private static final String SERVER_ADDRESS = ServerHelper.SERVER_NAME;
     private static final int PORT = 500;
 
     public static void main(String[] args) throws IOException, AWTException {

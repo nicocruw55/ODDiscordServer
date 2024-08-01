@@ -1,5 +1,7 @@
 package com.odfin.facade;
 
+import com.odfin.voicechat.VoiceServer;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -11,6 +13,7 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
     private static MessageFacade messageFacade;
     private static UserFacade userFacade;
     private static ChannelFacade channelFacade;
+    private static VoiceChatFacade voiceChatFacade;
     private List<ClientFacade> clients;
 
     public ServerFacadeImpl() throws RemoteException {
@@ -43,19 +46,11 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
     }
 
     @Override
-    public void registerClient(Remote client) throws RemoteException {
-        System.out.println("Registering client...");
-        if (client != null) {
-            clients.add((ClientFacade) client);
-        }
-    }
+    public VoiceChatFacade getVoiceChatFacade() throws RemoteException {
+        if(voiceChatFacade == null)
+            voiceChatFacade = new VoiceChatFacadeImpl();
 
-    @Override
-    public void unregisterClient(ClientFacade client) throws RemoteException {
-        if (client != null) {
-            clients.remove(client);
-            System.out.println("Client unregistered.");
-        }
+        return voiceChatFacade;
     }
 
 }

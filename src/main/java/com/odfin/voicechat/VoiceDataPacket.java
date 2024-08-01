@@ -4,11 +4,21 @@ import java.io.Serializable;
 
 public class VoiceDataPacket implements Serializable {
     private byte[] data;
-    private String vc;
+    private int vc;
+    private int user;
 
-    public VoiceDataPacket(byte[] data, String vc) {
+    public VoiceDataPacket(byte[] data, int vc, int user) {
         this.data = data;
         this.vc = vc;
+        this.user = user;
+    }
+
+    public int getUser() {
+        return user;
+    }
+
+    public void setUser(int user) {
+        this.user = user;
     }
 
     public byte[] getData() {
@@ -19,11 +29,11 @@ public class VoiceDataPacket implements Serializable {
         this.data = data;
     }
 
-    public String getVc() {
+    public int getVc() {
         return vc;
     }
 
-    public void setVc(String vc) {
+    public void setVc(int vc) {
         this.vc = vc;
     }
 }

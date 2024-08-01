@@ -1,27 +1,40 @@
 package com.odfin.voicechat;
 
+import com.odfin.facade.VoiceChatFacadeImpl;
+
 import java.io.*;
+import java.net.Socket;
 
 public class VoiceClientHandler {
     public ObjectOutputStream output;
     private ObjectInputStream in;
-    public String voiceChatID = "";
+    public int voiceChatID = -1;
+    public int userId = -1;
 
-    public VoiceClientHandler(java.net.Socket socket) throws Exception {
+    public VoiceClientHandler(Socket socket) throws Exception {
         this.output = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
 
         new Thread(() -> {
             while (true) {
                 try{
+                    VoiceChatFacadeImpl test = new VoiceChatFacadeImpl();
+                    System.out.println(test.getAllCallersFromChannelId(2));
+
                     VoiceDataPacket d = (VoiceDataPacket) in.readObject();
                     voiceChatID = d.getVc();
+                    userId = d.getUser();
+
                     for(VoiceClientHandler v : VoiceServer.clientHandlers){
-                        //if(v == this) continue;
-                        //if(v.voiceChatID.equals(voiceChatID)){
-                        v.output.writeObject(d);
-                        v.output.flush();
-                        //}
+                        //  continue if own client
+                        if(v == this)
+                            continue;
+
+                        // only send to clients in the same voicechat
+                        if(v.voiceChatID == (voiceChatID)){
+                            v.output.writeObject(d);
+                            v.output.flush();
+                        }
                     }
                 }
                 catch (Exception e){
