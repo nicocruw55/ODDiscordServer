@@ -1,5 +1,6 @@
 package com.odfin.persistence.impl;
 
+import com.odfin.core.Notification.NotificationServer;
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
 import com.odfin.persistence.util.DBHelper;
@@ -113,6 +114,8 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
         stmt.setInt(4, message.getChannelId());
         stmt.executeUpdate();
+
+        NotificationServer.notifyClients("A Message was inserted!!!");
 
         ResultSet rs = stmt.getGeneratedKeys();
         if (rs.next()) {
