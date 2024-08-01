@@ -50,7 +50,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public List<Message> getAllMessages() throws SQLException {
-        String query = SELECT + "*" + FROM + VIEW_NAME;
+        String query = SELECT + "*" + FROM + VIEW_NAME + " ORDER BY " + COL_TIMESTAMP + " ASC";
 
         List<Message> messages = new ArrayList<>();
         Connection conn = DBHelper.getConnection();
@@ -59,7 +59,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
         while (rs.next()) messages.add(createMessage(rs));
 
-        messages.sort(Comparator.comparing(Message::getTimestamp));
+       // messages.sort(Comparator.comparing(Message::getTimestamp));
 
         return messages;
     }
@@ -68,7 +68,7 @@ public class MySqlMessageDAO implements MessageDAO {
     public List<Message> getAllMessagesByChannelId(int channelId) throws SQLException {
         List<Message> messages = new ArrayList<>();
 
-        String query = SELECT + "*" + FROM + VIEW_NAME + WHERE + COL_CHANNEL + " = " + channelId;
+        String query = SELECT + "*" + FROM + VIEW_NAME + WHERE + COL_CHANNEL + " = " + channelId + " ORDER BY " + COL_TIMESTAMP + " ASC";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -76,7 +76,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
         while (rs.next()) messages.add(createMessage(rs));
 
-        messages.sort(Comparator.comparing(Message::getTimestamp));
+       // messages.sort(Comparator.comparing(Message::getTimestamp));
 
         return messages;
     }
