@@ -7,6 +7,7 @@ import com.odfin.facade.ServerFacadeImpl;
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RemoteServer;
 
 public class MessengerServer {
 
@@ -23,7 +24,8 @@ public class MessengerServer {
             }
         }).start();
 
-        System.setProperty("java.rmi.server.hostname", "localhost");
+        System.setProperty("java.rmi.server.hostname", "cruw-community.de");
+        RemoteServer.setLog(System.out);
         Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
         ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
         registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
