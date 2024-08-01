@@ -19,7 +19,7 @@ public class NotificationServer extends Thread{
 
     public NotificationServer() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
-        System.out.println("notification server startet on port " + PORT);
+        System.out.println("notification server started on port " + PORT);
     }
 
     @Override

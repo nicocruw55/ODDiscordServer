@@ -13,12 +13,9 @@ import java.rmi.registry.Registry;
 public class MessengerServer {
 
     public static void main(String[] args) throws IOException {
-
-        // notification server on seperate thread
         new NotificationServer().start();
-        //new VoiceServer().start();
 
-        System.setProperty("java.rmi.server.hostname", ServerHelper.SERVER_NAME);
+        System.setProperty("java.rmi.server.hostname", "localhost");
         Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
         ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
         registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
