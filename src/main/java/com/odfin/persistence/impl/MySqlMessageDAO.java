@@ -83,7 +83,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public Message updateMessage(Message message) throws SQLException {
-        String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + COL_CHANNEL + " = ?, " + WHERE + COL_ID + " = ?";
+        String query = UPDATE + TBL_NAME + SET + COL_USER + " = ?, " + COL_CONTENT + " = ?, " + COL_TIMESTAMP + " = ?, " + COL_CHANNEL + " = ? " + WHERE + COL_ID + " = ?";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -92,7 +92,7 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setString(2, message.getContent());
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
         stmt.setInt(4, message.getChannelId());
-        stmt.setInt(6, message.getId());
+        stmt.setInt(5, message.getId());
         stmt.executeUpdate();
 
         return getMessageById(message.getId());
