@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.*;
 
 public class VoiceClient {
-    private static final String SERVER_ADDRESS = "cruw-community.de";
+    private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 55;
     private static String voiceChat = "uid";
 
@@ -27,11 +27,11 @@ public class VoiceClient {
         }
 
         // Select a mixer for the microphone (this could be done through user input or a predefined index)
-        int selectedMicrophoneIndex = 12; // Change this to the index of the desired microphone mixer
+        int selectedMicrophoneIndex = 16; // Change this to the index of the desired microphone mixer
         Mixer microphoneMixer = AudioSystem.getMixer(mixers[selectedMicrophoneIndex]);
 
         // Select a mixer for the speakers (this could be done through user input or a predefined index)
-        int selectedSpeakerIndex = 7; // Change this to the index of the desired speaker mixer
+        int selectedSpeakerIndex = 10; // Change this to the index of the desired speaker mixer
         Mixer speakerMixer = AudioSystem.getMixer(mixers[selectedSpeakerIndex]);
 
         // Define audio format
@@ -54,7 +54,7 @@ public class VoiceClient {
         Thread t = new Thread(() -> {
             while (true) {
                 try {
-                    VoiceChannelDataPacket data = (VoiceChannelDataPacket) input.readObject();
+                    VoiceDataPacket data = (VoiceDataPacket) input.readObject();
                     speakers.write(data.getData(), 0,data.getData().length);
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -68,7 +68,7 @@ public class VoiceClient {
         while (true) {
             byte[] buffer = new byte[1024];
             microphone.read(buffer,0,buffer.length);
-            VoiceChannelDataPacket data = new VoiceChannelDataPacket(buffer,voiceChat);
+            VoiceDataPacket data = new VoiceDataPacket(buffer,voiceChat);
             output.writeObject(data);
             output.flush();
         }

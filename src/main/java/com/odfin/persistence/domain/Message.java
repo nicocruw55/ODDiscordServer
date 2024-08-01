@@ -6,37 +6,37 @@ import java.util.Objects;
 
 public class Message implements Serializable {
 
-    private Integer id;
-    private Integer senderID;
+    private int id;
+    private int senderId;
+    private int channelId;
     private String content;
     private LocalDateTime timestamp;
-    private MessageType messageType;
 
     public Message() {
     }
 
-    public Message(Integer id, Integer senderID, String content, LocalDateTime timestamp, MessageType messageType) {
+    public Message(int id, int senderId, int channelId, String content, LocalDateTime timestamp) {
         this.id = id;
-        this.senderID = senderID;
+        this.channelId = channelId;
+        this.senderId = senderId;
         this.content = content;
         this.timestamp = timestamp;
-        this.messageType = messageType;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getSenderId() {
-        return senderID;
+    public int getSenderId() {
+        return senderId;
     }
 
-    public void setSenderId(Integer senderID) {
-        this.senderID = senderID;
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
     }
 
     public String getContent() {
@@ -55,12 +55,12 @@ public class Message implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public MessageType getMessageType() {
-        return messageType;
+    public int getChannelId() {
+        return channelId;
     }
 
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
+    public void setChannelId(int chatId) {
+        this.channelId = chatId;
     }
 
     @Override
@@ -80,10 +80,19 @@ public class Message implements Serializable {
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", sender=" + senderID +
+                ", sender=" + senderId +
                 ", content='" + content + '\'' +
                 ", timestamp=" + timestamp +
-                ", messageType=" + messageType +
+                //", messageType=" + messageType +
                 '}';
     }
+
+    enum MessageType {
+        TEXT,
+        IMAGE,
+        FILE,
+        VIDEO,
+        OTHER
+    }
+
 }

@@ -1,14 +1,9 @@
 package com.odfin.facade;
 
-
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
-import com.odfin.persistence.domain.User;
 import com.odfin.persistence.factory.DAOFactory;
-import com.odfin.persistence.impl.MySqlMessageDAO;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -24,7 +19,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public Message getMessageById(Integer messageId) throws RemoteException {
+    public Message getMessageById(int messageId) throws RemoteException {
         try {
             return messageDAO.getMessageById(messageId);
         } catch (SQLException e) {
@@ -42,6 +37,15 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
+    public List<Message> getAllMessagesByChannelId(int channelId) throws RemoteException {
+        try {
+            return messageDAO.getAllMessagesByChannelId(channelId);
+        } catch (SQLException e) {
+            throw new RemoteException("Error updating message", e);
+        }
+    }
+
+    @Override
     public void updateMessage(Message message) throws RemoteException {
         try {
             messageDAO.updateMessage(message);
@@ -51,7 +55,7 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public void deleteMessage(Integer messageId) throws RemoteException {
+    public void deleteMessage(int messageId) throws RemoteException {
         try {
             messageDAO.deleteMessage(messageId);
         } catch (SQLException e) {
@@ -60,8 +64,12 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
     }
 
     @Override
-    public void sendMessage(String content, Integer senderId, Integer chatId) throws RemoteException {
-
+    public Message sendMessage(String content, int senderId, int channelId) throws RemoteException {
+        try {
+            return messageDAO.sendMessage(content, senderId, channelId);
+        } catch (SQLException e) {
+            throw new RemoteException("Error sending message", e);
+        }
     }
 
 

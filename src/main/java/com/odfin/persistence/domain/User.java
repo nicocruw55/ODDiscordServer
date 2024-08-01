@@ -5,26 +5,28 @@ import java.util.Objects;
 
 public class User implements Serializable {
 
-    private Integer id;
+    private int id;
     private String name;
     private String password;
+    private int statusId;
+    private String status;
 
-    public User(){
-
+    public User() {
     }
 
-    public User(Integer id, String name, String password) {
+    public User(int id, String name, String password, String status, int statusId) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.status = status;
+        this.statusId = statusId;
     }
 
-    // Getter und Setter
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -44,6 +46,22 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,10 +77,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return "User{" + "id=" + id + ", name='" + name + '\'' + ", password='" + password + '\'' + '}';
     }
 }

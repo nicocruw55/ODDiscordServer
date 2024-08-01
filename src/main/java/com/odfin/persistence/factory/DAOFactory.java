@@ -1,6 +1,6 @@
 package com.odfin.persistence.factory;
 
-import com.odfin.persistence.dao.ChatDAO;
+import com.odfin.persistence.dao.ChannelDAO;
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.dao.UserDAO;
 
@@ -10,7 +10,7 @@ public abstract class DAOFactory {
 
     public abstract MessageDAO getMessageDAO();
     public abstract UserDAO getUserDAO();
-    public abstract ChatDAO getChatDAO();
+    public abstract ChannelDAO getChatDAO();
 
     public static DAOFactory getDAOFactory(int factory){
         switch (factory){

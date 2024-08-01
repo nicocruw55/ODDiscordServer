@@ -1,27 +1,23 @@
-package com.odfin.voicechat;
+package com.odfin.screenshare2;
 
 import java.io.*;
 
-public class VoiceClientHandler {
+public class ScreenClientHandler {
     public ObjectOutputStream output;
     private ObjectInputStream in;
-    public String voiceChatID = "";
 
-    public VoiceClientHandler(java.net.Socket socket) throws Exception {
+    public ScreenClientHandler(java.net.Socket socket) throws Exception {
         this.output = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
 
         new Thread(() -> {
             while (true) {
                 try{
-                    VoiceDataPacket d = (VoiceDataPacket) in.readObject();
-                    voiceChatID = d.getVc();
-                    for(VoiceClientHandler v : VoiceServer.clientHandlers){
-                        //if(v == this) continue;
-                        //if(v.voiceChatID.equals(voiceChatID)){
-                        v.output.writeObject(d);
-                        v.output.flush();
-                        //}
+                    byte[] d = (byte[]) in.readObject();
+                    for(ScreenClientHandler s : ScreenServer.clientHandlers){
+                        if(s == this) continue;
+                        s.output.writeObject(d);
+                        s.output.flush();
                     }
                 }
                 catch (Exception e){
@@ -32,7 +28,7 @@ public class VoiceClientHandler {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                    VoiceServer.clientHandlers.remove(this);
+                    ScreenServer.clientHandlers.remove(this);
                     System.out.println("Removing");
                     break;
                 }

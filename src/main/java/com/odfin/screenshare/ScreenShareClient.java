@@ -2,7 +2,9 @@ package com.odfin.screenshare;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -23,11 +25,18 @@ public class ScreenShareClient {
              ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
 
             while (true) {
-                byte[] imageBytes = (byte[]) ois.readObject();
-                ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
-                BufferedImage image = ImageIO.read(bais);
-                label.setIcon(new ImageIcon(image));
-                frame.repaint();
+                try {
+                    byte[] imageBytes = (byte[]) ois.readObject();
+                    ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
+                    BufferedImage image = ImageIO.read(bais);
+
+                    // Resize image to fit the label
+                    Image scaledImage = image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
+                    label.setIcon(new ImageIcon(scaledImage));
+                    frame.repaint();
+                } catch (Exception e) {
+                    System.err.println("Error processing image: " + e.getMessage());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
