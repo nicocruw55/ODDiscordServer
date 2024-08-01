@@ -14,11 +14,9 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
     private static UserFacade userFacade;
     private static ChannelFacade channelFacade;
     private static VoiceChatFacade voiceChatFacade;
-    private List<ClientFacade> clients;
 
     public ServerFacadeImpl() throws RemoteException {
         super(65300);
-        clients = new ArrayList<>();
     }
 
     @Override

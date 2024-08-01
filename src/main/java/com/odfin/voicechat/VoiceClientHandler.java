@@ -1,7 +1,5 @@
 package com.odfin.voicechat;
 
-import com.odfin.facade.VoiceChatFacadeImpl;
-
 import java.io.*;
 import java.net.Socket;
 
@@ -18,9 +16,6 @@ public class VoiceClientHandler {
         new Thread(() -> {
             while (true) {
                 try{
-                    VoiceChatFacadeImpl test = new VoiceChatFacadeImpl();
-                    System.out.println(test.getAllCallersFromChannelId(2));
-
                     VoiceDataPacket d = (VoiceDataPacket) in.readObject();
                     voiceChatID = d.getVc();
                     userId = d.getUser();

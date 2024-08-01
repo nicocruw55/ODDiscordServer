@@ -29,7 +29,7 @@ public class NotificationServer extends Thread{
                 Socket clientSocket = serverSocket.accept();
                 NotificationClientHandler handler = new NotificationClientHandler(clientSocket);
                 handlers.add(handler);
-                System.out.println("connection");
+                System.out.println("Notification server connection");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

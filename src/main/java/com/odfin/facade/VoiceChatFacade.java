@@ -1,9 +1,11 @@
 package com.odfin.facade;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 
-public interface VoiceChatFacade {
+public interface VoiceChatFacade extends Remote {
 
-    List<Integer> getAllCallersFromChannelId(int channelId);
+    int[] getAllCallersFromChannelId(int channelId) throws RemoteException;
 
 }
