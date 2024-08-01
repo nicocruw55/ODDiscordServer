@@ -1,8 +1,10 @@
 package com.odfin.core;
 
+import com.odfin.core.Notification.NotificationClientHandler;
 import com.odfin.facade.*;
 
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -19,11 +21,14 @@ public class TestClient {
         ServerFacade serverFacade = (ServerFacade) registry.lookup(ServerFacade.class.getSimpleName()); 
         System.out.println("found server facade: " + serverFacade);
 
-        // Client remote object
+        /*// Client remote object
         ClientFacadeImpl clientFacade = new ClientFacadeImpl();
         ClientFacade stub = (ClientFacade) UnicastRemoteObject.exportObject(clientFacade, 0);
         serverFacade.registerClient(stub);
         System.out.println("client registered");
+        */
+
+        startNotificationClientHandler();
 
         // get some facades
         UserFacade userFacade = serverFacade.getUserFacade();
@@ -36,6 +41,15 @@ public class TestClient {
         System.out.println(messageFacade.getAllMessagesByChannelId(1));
         System.out.println(channelFacade.getAllChannelsByUserId(1));
 
+    }
 
+    private static void startNotificationClientHandler() {
+        try {
+            Socket socket = new Socket("localhost", 5000);
+            NotificationClientHandler clientHandler = new NotificationClientHandler(socket);
+            clientHandler.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
