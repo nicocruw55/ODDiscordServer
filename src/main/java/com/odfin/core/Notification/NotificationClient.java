@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 public class NotificationClient {
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = "cruw-community.de";
     private static final int SERVER_PORT = 5000;
 
     public NotificationClient(int userId) throws IOException {

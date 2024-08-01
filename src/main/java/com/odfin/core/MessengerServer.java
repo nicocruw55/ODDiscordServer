@@ -23,7 +23,7 @@ public class MessengerServer {
             }
         }).start();
 
-        System.setProperty("java.rmi.server.hostname", "localhost");
+        System.setProperty("java.rmi.server.hostname", "cruw-community.de");
         Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
         ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
         registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
