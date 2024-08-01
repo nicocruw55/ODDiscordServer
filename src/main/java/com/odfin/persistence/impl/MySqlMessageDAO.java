@@ -92,7 +92,7 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setString(2, message.getContent());
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
         stmt.setInt(4, message.getChannelId());
-        stmt.setInt(6, message.getId());
+        stmt.setInt(5, message.getId());
         stmt.executeUpdate();
 
         return getMessageById(message.getId());
