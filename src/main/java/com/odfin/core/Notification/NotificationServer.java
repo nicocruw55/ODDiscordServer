@@ -24,13 +24,12 @@ public class NotificationServer{
             Socket clientSocket = serverSocket.accept();
             NotificationClientHandler handler = new NotificationClientHandler(clientSocket);
             handlers.add(handler);
-            handler.start();
             System.out.println("connection");
-            notifyClients("Test notify", 1);
+            notifyClientsToUpdateChannel(1);
         }
     }
 
-    public static void notifyClients(String message, int channelId) {
+    public static void notifyClientsToUpdateChannel(int channelId) {
         List<User> usersFromChannel;
         try {
             usersFromChannel = new ServerFacadeImpl().getUserFacade().getAllUsersFromChannel(channelId);
@@ -49,7 +48,7 @@ public class NotificationServer{
                 if (userIds.contains(handler.userId)) {
                     try {
                         PrintWriter out = new PrintWriter(handler.clientSocket.getOutputStream(), true);
-                        out.println(message);
+                        out.println(channelId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

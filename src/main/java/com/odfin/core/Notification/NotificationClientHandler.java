@@ -21,23 +21,5 @@ public class NotificationClientHandler extends Thread {
         }
     }
 
-    @Override
-    public void run() {
-        String message;
-        try {
-            while ((message = in.readLine()) != null) {
-                System.out.println("Nachricht vom Client: " + message);
-            }
-        } catch (IOException e) {
-            try {
-                out.close();
-                in.close();
-                in.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            NotificationServer.handlers.remove(this);
-        }
-    }
 
 }

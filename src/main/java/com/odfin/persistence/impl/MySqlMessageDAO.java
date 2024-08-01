@@ -8,7 +8,6 @@ import com.odfin.persistence.util.DBHelper;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.odfin.persistence.util.DBHelper.*;
@@ -115,7 +114,8 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setInt(4, message.getChannelId());
         stmt.executeUpdate();
 
-        NotificationServer.notifyClients("A Message was inserted in channel id: " + message.getChannelId(), message.getChannelId());
+        // A new message was inserted to the channel. tell notification server to tell clients.
+        NotificationServer.notifyClientsToUpdateChannel(message.getChannelId());
 
         ResultSet rs = stmt.getGeneratedKeys();
         if (rs.next()) {
