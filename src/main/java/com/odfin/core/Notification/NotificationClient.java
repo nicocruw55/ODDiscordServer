@@ -1,23 +1,40 @@
 package com.odfin.core.Notification;
 
+import com.odfin.persistence.util.ServerHelper;
+
 import java.io.*;
 import java.net.*;
 
-public class NotificationClient {
-    private static final String SERVER_ADDRESS = "cruw-community.de"; // Ersetze dies durch die tatsächliche Server-IP
+public class NotificationClient extends Thread{
+
+    private static final String SERVER_ADDRESS = ServerHelper.SERVER_NAME;
     private static final int SERVER_PORT = 5000;
 
-    public NotificationClient(int userId) throws IOException {
-        Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
+    private int userId;
 
+    public NotificationClient(int userId) throws IOException {
+        this.socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.userId = userId;
+    }
+
+    @Override
+    public void run(){
         // send userId first before starting loop
         out.println(userId);
 
-        String message;
-        while ((message = in.readLine()) != null) {
-            System.out.println("Server-Benachrichtigung: " + message);
+        while (true) {
+            try {
+                String message;
+                if ((message = in.readLine()) != null)
+                    System.out.println("Notification: " + message);
+            } catch (IOException e) {
+                break;
+            }
         }
     }
 }

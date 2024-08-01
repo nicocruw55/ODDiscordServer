@@ -12,20 +12,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NotificationServer{
+public class NotificationServer extends Thread{
     private static final int PORT = 5000;
     public static List<NotificationClientHandler> handlers = Collections.synchronizedList(new ArrayList<>());
+    private ServerSocket serverSocket;
 
     public NotificationServer() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(PORT);
+        this.serverSocket = new ServerSocket(PORT);
         System.out.println("notification server startet on port " + PORT);
+    }
 
+    @Override
+    public void run(){
         while (true) {
-            Socket clientSocket = serverSocket.accept();
-            NotificationClientHandler handler = new NotificationClientHandler(clientSocket);
-            handlers.add(handler);
-            System.out.println("connection");
-            notifyClientsToUpdateChannel(1);
+            try {
+                Socket clientSocket = serverSocket.accept();
+                NotificationClientHandler handler = new NotificationClientHandler(clientSocket);
+                handlers.add(handler);
+                System.out.println("connection");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -37,7 +44,6 @@ public class NotificationServer{
             throw new RuntimeException("Fehler beim Abrufen der Benutzer aus dem Channel", e);
         }
 
-        // get all user ids from user in channel
         List<Integer> userIds = new ArrayList<>();
         for (User user : usersFromChannel) {
             userIds.add(user.getId());

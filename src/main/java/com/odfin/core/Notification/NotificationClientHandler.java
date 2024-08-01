@@ -3,7 +3,7 @@ package com.odfin.core.Notification;
 import java.io.*;
 import java.net.*;
 
-public class NotificationClientHandler extends Thread {
+public class NotificationClientHandler {
     public Socket clientSocket;
     public PrintWriter out;
     public BufferedReader in;

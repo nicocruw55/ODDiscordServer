@@ -3,6 +3,7 @@ package com.odfin.core;
 import com.odfin.core.Notification.NotificationServer;
 import com.odfin.facade.ServerFacade;
 import com.odfin.facade.ServerFacadeImpl;
+import com.odfin.persistence.util.ServerHelper;
 
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
@@ -13,17 +14,9 @@ public class MessengerServer {
     public static void main(String[] args) throws IOException {
 
         // notification server on seperate thread
-        new Thread(() -> {
-            while (true) {
-                try {
-                    new NotificationServer();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }).start();
+        new NotificationServer().start();
 
-        System.setProperty("java.rmi.server.hostname", "cruw-community.de");
+        System.setProperty("java.rmi.server.hostname", ServerHelper.SERVER_NAME);
         Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
         ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
         registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);

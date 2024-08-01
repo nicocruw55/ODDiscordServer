@@ -1,12 +1,7 @@
 package com.odfin.facade;
 
-import com.odfin.core.Notification.NotificationServer;
-
-import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
