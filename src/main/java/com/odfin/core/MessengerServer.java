@@ -3,7 +3,6 @@ package com.odfin.core;
 import com.odfin.core.Notification.NotificationServer;
 import com.odfin.facade.ServerFacade;
 import com.odfin.facade.ServerFacadeImpl;
-import com.odfin.voicechat.VoiceDataPacket;
 
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;

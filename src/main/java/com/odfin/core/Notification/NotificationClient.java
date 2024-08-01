@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 public class NotificationClient {
-    private static final String SERVER_ADDRESS = "localhost"; // Ersetze dies durch die tatsächliche Server-IP
+    private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 5000;
 
     public NotificationClient() throws IOException {

@@ -4,9 +4,9 @@ import java.io.*;
 import java.net.*;
 
 public class NotificationClientHandler extends Thread {
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    public Socket clientSocket;
+    public PrintWriter out;
+    public BufferedReader in;
 
     public NotificationClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -24,20 +24,17 @@ public class NotificationClientHandler extends Thread {
         try {
             while ((message = in.readLine()) != null) {
                 System.out.println("Nachricht vom Client: " + message);
-                // Hier kannst du auf Nachrichten vom Client reagieren, wenn nötig
             }
         } catch (IOException e) {
-            System.out.println("Verbindung zum Client verloren.");
-        } finally {
             try {
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                out.close();
+                in.close();
+                in.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+            NotificationServer.handlers.remove(this);
         }
     }
 
-    public void sendMessage(String message) {
-        out.println(message);
-    }
 }
