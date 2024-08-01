@@ -7,6 +7,7 @@ import com.odfin.persistence.util.DBHelper;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.odfin.persistence.util.DBHelper.*;
@@ -58,6 +59,8 @@ public class MySqlMessageDAO implements MessageDAO {
 
         while (rs.next()) messages.add(createMessage(rs));
 
+        messages.sort(Comparator.comparing(Message::getTimestamp));
+
         return messages;
     }
 
@@ -72,6 +75,8 @@ public class MySqlMessageDAO implements MessageDAO {
         ResultSet rs = stmt.executeQuery(query);
 
         while (rs.next()) messages.add(createMessage(rs));
+
+        messages.sort(Comparator.comparing(Message::getTimestamp));
 
         return messages;
     }

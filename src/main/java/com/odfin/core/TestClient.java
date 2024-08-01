@@ -1,19 +1,12 @@
 package com.odfin.core;
 
 import com.odfin.core.Notification.NotificationClient;
-import com.odfin.core.Notification.NotificationClientHandler;
-import com.odfin.core.Notification.NotificationServer;
 import com.odfin.facade.*;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 
 public class TestClient {
 
