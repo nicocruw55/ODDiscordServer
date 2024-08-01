@@ -14,16 +14,19 @@ import static com.odfin.persistence.util.DBHelper.*;
 public class MySqlMessageDAO implements MessageDAO {
 
     public static final String TBL_NAME = "Messages";
+    public static final String VIEW_NAME = "MessagesWithUsername";
     public static final String COL_ID = "ID";
     public static final String COL_USER = "user_ID";
+    public static final String COL_NAME = "name";
     public static final String COL_CHANNEL = "channel_ID";
-    public static final String COL_CONTENT = "Content";
-    public static final String COL_TIMESTAMP = "Timestamp";
+    public static final String COL_CONTENT = "content";
+    public static final String COL_TIMESTAMP = "timestamp";
 
     public Message createMessage(ResultSet rs) throws SQLException {
         Message message = new Message();
         message.setId(rs.getInt(COL_ID));
         message.setSenderId(rs.getInt(COL_USER));
+        message.setName(rs.getString(COL_NAME));
         message.setChannelId(rs.getInt(COL_CHANNEL));
         message.setContent(rs.getString(COL_CONTENT));
         message.setTimestamp(rs.getTimestamp(COL_TIMESTAMP).toLocalDateTime());
@@ -32,7 +35,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public Message getMessageById(int messageId) throws SQLException {
-        String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
+        String query = SELECT + "*" + FROM + VIEW_NAME + WHERE + COL_ID + " = ?";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -46,7 +49,7 @@ public class MySqlMessageDAO implements MessageDAO {
 
     @Override
     public List<Message> getAllMessages() throws SQLException {
-        String query = SELECT + "*" + FROM + TBL_NAME;
+        String query = SELECT + "*" + FROM + VIEW_NAME;
 
         List<Message> messages = new ArrayList<>();
         Connection conn = DBHelper.getConnection();
@@ -62,7 +65,7 @@ public class MySqlMessageDAO implements MessageDAO {
     public List<Message> getAllMessagesByChannelId(int channelId) throws SQLException {
         List<Message> messages = new ArrayList<>();
 
-        String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_CHANNEL + " = " + channelId;
+        String query = SELECT + "*" + FROM + VIEW_NAME + WHERE + COL_CHANNEL + " = " + channelId;
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -89,7 +92,7 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setString(2, message.getContent());
         stmt.setTimestamp(3, Timestamp.valueOf(message.getTimestamp()));
         stmt.setInt(4, message.getChannelId());
-        stmt.setInt(5, message.getId());
+        stmt.setInt(6, message.getId());
         stmt.executeUpdate();
 
         return getMessageById(message.getId());

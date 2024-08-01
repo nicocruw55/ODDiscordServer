@@ -11,6 +11,5 @@ public interface ServerFacade extends Remote {
     ChannelFacade getChannelFacade() throws RemoteException;
     void registerClient(Remote client) throws RemoteException;
     void unregisterClient(ClientFacade client) throws RemoteException;
-    boolean registerClient2(String ip, int port) throws RemoteException, NotBoundException;
 
 }

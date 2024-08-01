@@ -1,36 +1,35 @@
 package com.odfin.core;
 
+import com.odfin.core.Notification.NotificationServer;
 import com.odfin.facade.ServerFacade;
 import com.odfin.facade.ServerFacadeImpl;
+import com.odfin.voicechat.VoiceDataPacket;
 
-import java.rmi.RemoteException;
+import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 
 public class MessengerServer {
 
-    public static void main(String[] args) {
-        try {
-            // Setze den Hostnamen für die RMI-Server
-            System.setProperty("java.rmi.server.hostname", "172.19.115.113");
+    public static void main(String[] args) throws IOException {
 
-            // Erstelle oder bekomme die RMI-Registry
-            Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-            System.out.println("RMI Registry started on port " + Registry.REGISTRY_PORT);
+        // notification server on seperate thread
+        new Thread(() -> {
+            while (true) {
+                try {
+                    new NotificationServer();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
 
-            // Erstelle die Implementierung des ServerFacade
-            ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
-
-            // Binde das ServerFacade-Objekt an die Registry
-            registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
-
-            System.out.println("ServerFacade bound to registry and ready.");
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Server failed to start.", e);
-        }
+        System.setProperty("java.rmi.server.hostname", "localhost");
+        Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+        ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
+        registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
+        System.out.println("Messenger RMI registry created...");
+        NotificationServer.notifyClients("Test notification...");
     }
 
 }

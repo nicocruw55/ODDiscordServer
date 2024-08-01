@@ -1,5 +1,7 @@
 package com.odfin.facade;
 
+import com.odfin.core.Notification.NotificationServer;
+
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -47,30 +49,11 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
 
     public void registerClient(Remote client) throws RemoteException {
         System.out.println("Registering client...");
+        NotificationServer.notifyClients("Test notification");
         if (client != null) {
             clients.add((ClientFacade) client);
-            System.out.println("Client registered.");
-            notifyClients("Hello Client!!");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             notifyClients("Hello Client!!");
         }
-    }
-
-    public boolean registerClient2(String ip, int port) throws RemoteException, NotBoundException {
-        System.out.println("registering...");
-        System.out.println("ip: " + ip);
-        System.out.println("port: " + port);
-        System.out.println("getting registry...");
-        Registry registry = LocateRegistry.getRegistry(ip, port);
-        System.out.println("registry lookup...");
-        ClientFacade client = (ClientFacade) registry.lookup(ClientFacade.class.getSimpleName());
-        clients.add(client);
-        notifyClients("Hello Client!!");
-        return true;
     }
 
     public void unregisterClient(ClientFacade client) throws RemoteException {
