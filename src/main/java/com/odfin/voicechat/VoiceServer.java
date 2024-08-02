@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoiceServer {
+public class VoiceServer implements Runnable{
 
     public static List<VoiceClientHandler> clientHandlers = new ArrayList<>();
 
@@ -16,6 +16,22 @@ public class VoiceServer {
             System.out.println("Connection");
             VoiceClientHandler handler = new VoiceClientHandler(s);
             clientHandlers.add(handler);
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            ServerSocket ss = new ServerSocket(55);
+            System.out.println("Voice server thread started...");
+            while (true) {
+                Socket s = ss.accept();
+                System.out.println("Connection");
+                VoiceClientHandler handler = new VoiceClientHandler(s);
+                clientHandlers.add(handler);
+            }
+        }catch(Exception e){
+
         }
     }
 }
