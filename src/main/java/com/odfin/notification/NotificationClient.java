@@ -1,4 +1,4 @@
-package com.odfin.core.Notification;
+package com.odfin.notification;
 
 import com.odfin.persistence.util.ServerHelper;
 
@@ -24,8 +24,7 @@ public class NotificationClient extends Thread{
 
     @Override
     public void run(){
-        // send userId first before starting loop
-        out.println(userId);
+        out.println(userId);  // send userId first before starting loop
 
         while (true) {
             try {

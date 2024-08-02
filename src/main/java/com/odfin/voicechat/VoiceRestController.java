@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 public class VoiceRestController {
 
-    // Beispiel-Daten für Teilnehmer
+    /*// Beispiel-Daten für Teilnehmer
     private final List<VoiceClientHandler> participants = VoiceServer.clientHandlers;
 
     @GetMapping("/voicecall/participants")
@@ -22,5 +22,5 @@ public class VoiceRestController {
             }
         }
         return participantIdsInCall;
-    }
+    }*/
 }

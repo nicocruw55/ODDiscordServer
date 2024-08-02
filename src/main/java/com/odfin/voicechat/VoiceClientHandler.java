@@ -1,74 +1,54 @@
 package com.odfin.voicechat;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.*;
 import java.net.Socket;
 
 public class VoiceClientHandler {
-    public ObjectOutputStream output;
-    private ObjectInputStream in;
-    public int voiceChatID = -1;
-    public int userId = -1;
+    private ObjectOutputStream output;
+    private ObjectInputStream input;
+    private int voiceChatID = -1;
 
-    @Autowired
-    private VoiceChatWebSocketHandler webSocketHandler;
-
-    public VoiceClientHandler(Socket socket, VoiceChatWebSocketHandler webSocketHandler) throws Exception {
+    public VoiceClientHandler(Socket socket) throws IOException {
         this.output = new ObjectOutputStream(socket.getOutputStream());
-        this.in = new ObjectInputStream(socket.getInputStream());
-        this.webSocketHandler = webSocketHandler;
+        this.input = new ObjectInputStream(socket.getInputStream());
 
-        new Thread(() -> {
-            // wait for initial data to set voicechat and userid
-            try {
-                VoiceDataPacket d = (VoiceDataPacket) in.readObject();
-                voiceChatID = d.getVc();
-                userId = d.getUser();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+        new Thread(this::handleClient).start();
+    }
 
-            try {
-                webSocketHandler.sendMessageToAll(String.format("JOIN,%d,%d", userId, voiceChatID));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+    private void handleClient() {
+        try {
             while (true) {
-                try{
-                    VoiceDataPacket d = (VoiceDataPacket) in.readObject();
-                    voiceChatID = d.getVc();
-                    userId = d.getUser();
+                VoiceDataPacket dataPacket = (VoiceDataPacket) input.readObject();
+                voiceChatID = dataPacket.getVc();
 
-                    for(VoiceClientHandler v : VoiceServer.clientHandlers){
-                        //  continue if own client
-                        if(v == this)
-                            continue;
-
-                        // only send to clients in the same voicechat
-                        if(v.voiceChatID == (voiceChatID)){
-                            v.output.writeObject(d);
-                            v.output.flush();
-                        }
+                for (VoiceClientHandler clientHandler : VoiceServer.clientHandlers) {
+                    if (shouldSendPacketToClient(clientHandler)) {
+                        sendPacketToClient(clientHandler, dataPacket);
                     }
-                }
-                catch (Exception e){
-                    try {
-                        System.out.println("Disconnect from vcs");
-                        VoiceServer.clientHandlers.remove(this);
-                        webSocketHandler.sendMessageToAll(String.format("LEAVE,%d,%d", userId, voiceChatID));
-                        output.close();
-                        in.close();
-                        socket.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
                 }
             }
-        }).start();
+        } catch (Exception e) {
+            handleDisconnection();
+        }
+    }
+
+    private boolean shouldSendPacketToClient(VoiceClientHandler clientHandler) {
+        return clientHandler != this && clientHandler.voiceChatID == this.voiceChatID;
+    }
+
+    private void sendPacketToClient(VoiceClientHandler clientHandler, VoiceDataPacket dataPacket) throws IOException {
+        clientHandler.output.writeObject(dataPacket);
+        clientHandler.output.flush();
+    }
+
+    private void handleDisconnection() {
+        try {
+            System.out.println("Disconnect from vcs");
+            VoiceServer.clientHandlers.remove(this);
+            output.close();
+            input.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

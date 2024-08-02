@@ -1,4 +1,4 @@
-package com.odfin.core.Notification;
+package com.odfin.notification;
 
 import com.odfin.facade.ServerFacadeImpl;
 import com.odfin.persistence.domain.User;
@@ -12,18 +12,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NotificationServer extends Thread{
+public class NotificationServer extends Thread {
+
     private static final int PORT = 5000;
-    public static List<NotificationClientHandler> handlers = Collections.synchronizedList(new ArrayList<>());
+    private static final List<NotificationClientHandler> handlers = Collections.synchronizedList(new ArrayList<>());
+
     private ServerSocket serverSocket;
 
     public NotificationServer() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
-        System.out.println("notification server started on port " + PORT);
+        System.out.println("Notification server started on port " + PORT);
     }
 
     @Override
-    public void run(){
+    public void run() {
         while (true) {
             try {
                 Socket clientSocket = serverSocket.accept();
@@ -31,7 +33,7 @@ public class NotificationServer extends Thread{
                 handlers.add(handler);
                 System.out.println("Notification server connection");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error accepting client connection", e);
             }
         }
     }
@@ -41,7 +43,7 @@ public class NotificationServer extends Thread{
         try {
             usersFromChannel = new ServerFacadeImpl().getUserFacade().getAllUsersFromChannel(channelId);
         } catch (RemoteException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Benutzer aus dem Channel", e);
+            throw new RuntimeException("Error retrieving users from the channel", e);
         }
 
         List<Integer> userIds = new ArrayList<>();
@@ -52,14 +54,18 @@ public class NotificationServer extends Thread{
         synchronized (handlers) {
             for (NotificationClientHandler handler : handlers) {
                 if (userIds.contains(handler.userId)) {
-                    try {
-                        PrintWriter out = new PrintWriter(handler.clientSocket.getOutputStream(), true);
-                        out.println(channelId);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    sendUpdateNotification(handler, channelId);
                 }
             }
+        }
+    }
+
+    private static void sendUpdateNotification(NotificationClientHandler handler, int channelId) {
+        try {
+            PrintWriter out = new PrintWriter(handler.socket.getOutputStream(), true);
+            out.println(channelId);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

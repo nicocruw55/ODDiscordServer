@@ -1,6 +1,6 @@
 package com.odfin.persistence.impl;
 
-import com.odfin.core.Notification.NotificationServer;
+import com.odfin.notification.NotificationServer;
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
 import com.odfin.persistence.util.DBHelper;

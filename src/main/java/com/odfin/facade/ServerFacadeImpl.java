@@ -13,7 +13,6 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
     private static MessageFacade messageFacade;
     private static UserFacade userFacade;
     private static ChannelFacade channelFacade;
-    private static VoiceChatFacade voiceChatFacade;
 
     public ServerFacadeImpl() throws RemoteException {
         super(65300);
@@ -41,14 +40,6 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
             channelFacade = new ChannelFacadeImpl();
 
         return channelFacade;
-    }
-
-    @Override
-    public VoiceChatFacade getVoiceChatFacade() throws RemoteException {
-        if(voiceChatFacade == null)
-            voiceChatFacade = new VoiceChatFacadeImpl();
-
-        return voiceChatFacade;
     }
 
 }

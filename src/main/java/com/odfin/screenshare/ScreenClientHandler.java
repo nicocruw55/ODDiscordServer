@@ -1,4 +1,4 @@
-package com.odfin.screenshare2;
+package com.odfin.screenshare;
 
 import java.io.*;
 
