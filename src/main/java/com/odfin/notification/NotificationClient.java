@@ -1,6 +1,6 @@
 package com.odfin.notification;
 
-import com.odfin.persistence.util.ServerHelper;
+import com.odfin.util.ServerHelper;
 
 import java.io.*;
 import java.net.*;

@@ -1,6 +1,6 @@
 package com.odfin.screenshare;
 
-import com.odfin.persistence.util.ServerHelper;
+import com.odfin.util.ServerHelper;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

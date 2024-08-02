@@ -3,7 +3,7 @@ package com.odfin.core;
 import com.odfin.notification.NotificationServer;
 import com.odfin.facade.ServerFacade;
 import com.odfin.facade.ServerFacadeImpl;
-import com.odfin.persistence.util.ServerHelper;
+import com.odfin.util.ServerHelper;
 
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;

@@ -1,4 +1,4 @@
-package com.odfin.persistence.util;
+package com.odfin.util;
 
 public class ServerHelper {
 

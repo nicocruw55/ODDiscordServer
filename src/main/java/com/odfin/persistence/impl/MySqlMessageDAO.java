@@ -3,14 +3,14 @@ package com.odfin.persistence.impl;
 import com.odfin.notification.NotificationServer;
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.domain.Message;
-import com.odfin.persistence.util.DBHelper;
+import com.odfin.util.DBHelper;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.odfin.persistence.util.DBHelper.*;
+import static com.odfin.util.DBHelper.*;
 
 public class MySqlMessageDAO implements MessageDAO {
 

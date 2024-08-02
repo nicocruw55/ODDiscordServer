@@ -2,13 +2,13 @@ package com.odfin.persistence.impl;
 
 import com.odfin.persistence.dao.ChannelDAO;
 import com.odfin.persistence.domain.Channel;
-import com.odfin.persistence.util.DBHelper;
+import com.odfin.util.DBHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.odfin.persistence.util.DBHelper.*;
+import static com.odfin.util.DBHelper.*;
 
 public class MySqlChannelDAO implements ChannelDAO {
 
