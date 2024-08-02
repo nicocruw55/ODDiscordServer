@@ -1,5 +1,7 @@
 package com.odfin.screenshare;
 
+import com.odfin.persistence.util.ServerHelper;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +12,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ScreenShareClient {
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = ServerHelper.SERVER_NAME;
     private static final int PORT = 5000;
 
     public static void main(String[] args) {

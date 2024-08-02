@@ -4,6 +4,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.odfin.persistence.util.ServerHelper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -16,11 +18,11 @@ public class VoiceServer {
     public static void main(String[] args) throws Exception {
 
         //Springboot
-        /*SpringApplication app = new SpringApplication(VoiceServer.class);
-        app.setDefaultProperties(java.util.Collections.singletonMap("server.port", "9090"));
-        app.setDefaultProperties(java.util.Collections.singletonMap("server.address", "localhost"));
-        app.run(args);*/
-        ApplicationContext context = SpringApplication.run(VoiceServer.class, args);
+        SpringApplication app = new SpringApplication(VoiceServer.class);
+        //app.setDefaultProperties(java.util.Collections.singletonMap("server.port", "9090"));
+        app.setDefaultProperties(java.util.Collections.singletonMap("server.address", ServerHelper.SERVER_NAME));
+        app.run(args);
+        ApplicationContext context = app.run(args);
         VoiceChatWebSocketHandler webSocketHandler = context.getBean(VoiceChatWebSocketHandler.class);
 
 

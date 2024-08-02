@@ -38,7 +38,7 @@ public class DBHelper {
     }
 
     private static String getMySqlUrl() {
-        String host = "cruw-community.de";
+        String host = ServerHelper.SERVER_NAME;
         int port = 3306;
         String dbName = "ODDiscord";
 

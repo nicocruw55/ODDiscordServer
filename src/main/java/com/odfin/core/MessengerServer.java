@@ -15,7 +15,7 @@ public class MessengerServer {
     public static void main(String[] args) throws IOException {
         new NotificationServer().start();
 
-        System.setProperty("java.rmi.server.hostname", "localhost");
+        System.setProperty("java.rmi.server.hostname", ServerHelper.SERVER_NAME);
         Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
         ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
         registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
