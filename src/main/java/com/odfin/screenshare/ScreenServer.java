@@ -5,19 +5,23 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScreenServer {
+public class ScreenServer implements Runnable {
 
     public static List<ScreenClientHandler> clientHandlers = new ArrayList<>();
 
-    public static void main(String[] args) throws Exception {
-        ServerSocket ss = new ServerSocket(500);
-        while (true) {
-            System.out.println("Waiting");
-            Socket s = ss.accept();
-            System.out.println("Connection");
-            ScreenClientHandler handler = new ScreenClientHandler(s);
-            System.out.println("xcxc");
-            clientHandlers.add(handler);
+    @Override
+    public void run() {
+        try {
+            ServerSocket ss = new ServerSocket(500);
+            System.out.println("screen server started on port 500...");
+            while (true) {
+                Socket s = ss.accept();
+                System.out.println("screen client connected...");
+                ScreenClientHandler handler = new ScreenClientHandler(s);
+                clientHandlers.add(handler);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

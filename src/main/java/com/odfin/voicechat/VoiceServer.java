@@ -5,33 +5,23 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoiceServer implements Runnable{
+public class VoiceServer implements Runnable {
 
     public static List<VoiceClientHandler> clientHandlers = new ArrayList<>();
-
-    public static void main(String[] args) throws Exception {
-        ServerSocket ss = new ServerSocket(55);
-        while (true) {
-            Socket s = ss.accept();
-            System.out.println("Connection");
-            VoiceClientHandler handler = new VoiceClientHandler(s);
-            clientHandlers.add(handler);
-        }
-    }
 
     @Override
     public void run() {
         try {
             ServerSocket ss = new ServerSocket(55);
-            System.out.println("Voice server thread started...");
+            System.out.println("Voice server started on port 55...");
             while (true) {
                 Socket s = ss.accept();
-                System.out.println("Connection");
+                System.out.println("voice client connected...");
                 VoiceClientHandler handler = new VoiceClientHandler(s);
                 clientHandlers.add(handler);
             }
-        }catch(Exception e){
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

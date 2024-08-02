@@ -10,5 +10,6 @@ public interface ServerFacade extends Remote {
     UserFacade getUserFacade() throws RemoteException;
     ChannelFacade getChannelFacade() throws RemoteException;
     VoiceChatFacade getVoiceChatFacade() throws RemoteException;
+    ScreenShareFacade getScreenShareFacade() throws RemoteException;
 
 }

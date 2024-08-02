@@ -5,6 +5,6 @@ import java.rmi.RemoteException;
 
 public interface VoiceChatFacade extends Remote {
 
-    int getClientAmount() throws RemoteException;
+    int[] getVoiceUsersByChannelId(int channelId) throws RemoteException;
 
 }

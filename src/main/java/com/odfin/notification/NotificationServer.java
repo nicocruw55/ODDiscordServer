@@ -12,29 +12,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NotificationServer extends Thread {
+public class NotificationServer implements Runnable {
 
     private static final int PORT = 5000;
     private static final List<NotificationClientHandler> handlers = Collections.synchronizedList(new ArrayList<>());
 
     private ServerSocket serverSocket;
 
-    public NotificationServer() throws IOException {
-        this.serverSocket = new ServerSocket(PORT);
-        System.out.println("Notification server started on port " + PORT);
-    }
-
     @Override
     public void run() {
-        while (true) {
-            try {
+        try {
+            this.serverSocket = new ServerSocket(PORT);
+            System.out.println("notification server started on port " + PORT + "...");
+            while (true) {
                 Socket clientSocket = serverSocket.accept();
                 NotificationClientHandler handler = new NotificationClientHandler(clientSocket);
                 handlers.add(handler);
-                System.out.println("Notification server connection");
-            } catch (IOException e) {
-                throw new RuntimeException("Error accepting client connection", e);
+                System.out.println("notification server connection...");
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Error accepting client connection", e);
         }
     }
 
@@ -68,4 +65,5 @@ public class NotificationServer extends Thread {
             e.printStackTrace();
         }
     }
+
 }
