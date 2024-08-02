@@ -11,6 +11,7 @@ public abstract class DAOFactory {
     public abstract MessageDAO getMessageDAO();
     public abstract UserDAO getUserDAO();
     public abstract ChannelDAO getChatDAO();
+    public abstract ChannelDAO getChannelGroupDAO();
 
     public static DAOFactory getDAOFactory(int factory){
         switch (factory){
