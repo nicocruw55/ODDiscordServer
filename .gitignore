@@ -12,6 +12,7 @@ target/
 *.iml
 *.ipr
 
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -36,3 +37,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/.idea/dataSources.local.xml
+/.idea/dataSources.xml
+/.idea/sqldialects.xml
+/.idea/dataSources/a0c83f92-c556-4f91-89f4-445ef099cf91/storage_v2/_src_/schema/ODDiscord.lwHGHw.meta
+/.idea/dataSources/a0c83f92-c556-4f91-89f4-445ef099cf91.xml
+/.idea/dataSources/a0c83f92-c556-4f91-89f4-445ef099cf91/storage_v2/_src_/schema/ODDiscord.lwHGHw.zip
