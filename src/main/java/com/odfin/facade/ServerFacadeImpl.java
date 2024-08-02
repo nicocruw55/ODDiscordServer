@@ -1,12 +1,7 @@
 package com.odfin.facade;
 
-import com.odfin.voicechat.VoiceServer;
-
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacade{
 

@@ -1,6 +1,8 @@
 package com.odfin.voicechat;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class VoiceClientHandler {
     public ObjectOutputStream output;
@@ -17,7 +19,7 @@ public class VoiceClientHandler {
                     VoiceDataPacket d = (VoiceDataPacket) in.readObject();
                     voiceChatID = d.getVc();
                     for(VoiceClientHandler v : VoiceServer.clientHandlers){
-                        //if(v == this) continue;
+                        if(v == this) continue;
                         //if(v.voiceChatID.equals(voiceChatID)){
                         //System.out.println("relaying");
                         v.output.writeObject(d);
@@ -39,7 +41,6 @@ public class VoiceClientHandler {
                 }
             }
         }).start();
-
 
     }
 }
