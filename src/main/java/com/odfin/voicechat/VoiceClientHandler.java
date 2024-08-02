@@ -1,54 +1,45 @@
 package com.odfin.voicechat;
 
 import java.io.*;
-import java.net.Socket;
 
 public class VoiceClientHandler {
-    private ObjectOutputStream output;
-    private ObjectInputStream input;
-    private int voiceChatID = -1;
+    public ObjectOutputStream output;
+    private ObjectInputStream in;
+    public String voiceChatID = "";
 
-    public VoiceClientHandler(Socket socket) throws IOException {
+    public VoiceClientHandler(java.net.Socket socket) throws Exception {
         this.output = new ObjectOutputStream(socket.getOutputStream());
-        this.input = new ObjectInputStream(socket.getInputStream());
+        this.in = new ObjectInputStream(socket.getInputStream());
 
-        new Thread(this::handleClient).start();
-    }
-
-    private void handleClient() {
-        try {
+        new Thread(() -> {
             while (true) {
-                VoiceDataPacket dataPacket = (VoiceDataPacket) input.readObject();
-                voiceChatID = dataPacket.getVc();
-
-                for (VoiceClientHandler clientHandler : VoiceServer.clientHandlers) {
-                    if (shouldSendPacketToClient(clientHandler)) {
-                        sendPacketToClient(clientHandler, dataPacket);
+                try{
+                    VoiceDataPacket d = (VoiceDataPacket) in.readObject();
+                    voiceChatID = d.getVc();
+                    for(VoiceClientHandler v : VoiceServer.clientHandlers){
+                        //if(v == this) continue;
+                        //if(v.voiceChatID.equals(voiceChatID)){
+                        //System.out.println("relaying");
+                        v.output.writeObject(d);
+                        v.output.flush();
+                        //}
                     }
                 }
+                catch (Exception e){
+                    try {
+                        output.close();
+                        in.close();
+                        socket.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    VoiceServer.clientHandlers.remove(this);
+                    System.out.println("Removing");
+                    break;
+                }
             }
-        } catch (Exception e) {
-            handleDisconnection();
-        }
-    }
+        }).start();
 
-    private boolean shouldSendPacketToClient(VoiceClientHandler clientHandler) {
-        return clientHandler != this && clientHandler.voiceChatID == this.voiceChatID;
-    }
 
-    private void sendPacketToClient(VoiceClientHandler clientHandler, VoiceDataPacket dataPacket) throws IOException {
-        clientHandler.output.writeObject(dataPacket);
-        clientHandler.output.flush();
-    }
-
-    private void handleDisconnection() {
-        try {
-            System.out.println("Disconnect from vcs");
-            VoiceServer.clientHandlers.remove(this);
-            output.close();
-            input.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
