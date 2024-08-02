@@ -15,6 +15,7 @@ public class VoiceClientHandler {
     private final Socket socket;
 
     public VoiceClientHandler(Socket socket) throws Exception {
+
         this.socket = socket;
         this.output = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
@@ -33,6 +34,9 @@ public class VoiceClientHandler {
             // loop -> gets input from corresponding client and sends it to all other clients
             while (true) {
                 try {
+                    if(socket.isClosed()){
+                        System.out.println("Socket closed?");
+                    }
                     VoiceDataPacket d = (VoiceDataPacket) in.readObject();
                     for (VoiceClientHandler v : VoiceServer.clientHandlers) {
                         //if(v == this) continue;
