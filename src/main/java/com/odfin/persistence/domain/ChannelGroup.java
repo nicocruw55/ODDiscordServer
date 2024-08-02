@@ -3,19 +3,19 @@ package com.odfin.persistence.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Server implements Serializable {
+public class ChannelGroup implements Serializable {
 
     int id;
     String name;
 
-    public Server(String id, String name) {
+    public ChannelGroup(String id, String name) {
         this.id = Integer.parseInt(id);
         this.name = name;
     }
 
-    public Server() {}
+    public ChannelGroup() {}
 
-    public Server(int id, String name) {
+    public ChannelGroup(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -40,8 +40,8 @@ public class Server implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Server server = (Server) o;
-        return id == server.id;
+        ChannelGroup channelGroup = (ChannelGroup) o;
+        return id == channelGroup.id;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Server implements Serializable {
 
     @Override
     public String toString() {
-        return "Server{" +
+        return "ChannelGroup{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
