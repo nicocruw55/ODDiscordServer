@@ -15,6 +15,7 @@ public class VoiceClientHandler {
     private final Socket socket;
 
     public VoiceClientHandler(Socket socket) throws Exception {
+
         this.socket = socket;
         this.output = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());

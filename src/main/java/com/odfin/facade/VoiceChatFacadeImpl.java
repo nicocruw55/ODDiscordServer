@@ -31,4 +31,15 @@ public class VoiceChatFacadeImpl extends UnicastRemoteObject implements VoiceCha
 
         return userIdsArray;
     }
+
+    @Override
+    public boolean isUserInVoiceChannel(int userId, int channelId) throws RemoteException {
+        for(VoiceClientHandler v : VoiceServer.clientHandlers){
+            if(v.channelId == channelId && v.userId == userId){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

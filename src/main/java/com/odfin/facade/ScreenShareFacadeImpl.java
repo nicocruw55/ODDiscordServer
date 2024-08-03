@@ -2,6 +2,8 @@ package com.odfin.facade;
 
 import com.odfin.screenshare.ScreenClientHandler;
 import com.odfin.screenshare.ScreenServer;
+import com.odfin.voicechat.VoiceClientHandler;
+import com.odfin.voicechat.VoiceServer;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -30,6 +32,20 @@ public class ScreenShareFacadeImpl extends UnicastRemoteObject implements Screen
         }
 
         return userIdsArray;
+    }
+
+    @Override
+    public boolean isUserStreamingInChannel(int userId, int channelId) throws RemoteException {
+        for(ScreenClientHandler s : ScreenServer.clientHandlers){
+            System.out.println(s.channelId);
+            System.out.println(s.userId);
+            System.out.println(s.sending);
+            if(s.channelId == channelId && s.userId == userId && s.sending){
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
