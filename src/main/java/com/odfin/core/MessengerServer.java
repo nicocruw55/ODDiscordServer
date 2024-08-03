@@ -32,7 +32,7 @@ public class MessengerServer {
         Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
         ServerFacadeImpl serverFacadeImpl = new ServerFacadeImpl();
         registry.rebind(ServerFacade.class.getSimpleName(), serverFacadeImpl);
-        System.out.println("Messenger RMI registry created...");
+        System.out.println("RMI registry created");
     }
 
 }
