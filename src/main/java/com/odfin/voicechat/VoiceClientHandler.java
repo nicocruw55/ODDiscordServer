@@ -26,7 +26,7 @@ public class VoiceClientHandler {
                 VoiceDataPacket d = (VoiceDataPacket) in.readObject();
                 channelId = d.getChannelId();
                 userId = d.getUserId();
-                NotificationServer.notifyClientsToUpdateChannel(channelId);
+                NotificationServer.notifyClients("Voice,"+channelId);
             } catch (Exception e) {
                 cleanup();
             }
@@ -63,7 +63,7 @@ public class VoiceClientHandler {
             ex.printStackTrace();
         }
         VoiceServer.clientHandlers.remove(this);
-        NotificationServer.notifyClientsToUpdateChannel(channelId);
+        NotificationServer.notifyClients("Voice,"+channelId);
         System.out.println("removing voice client...");
     }
 }

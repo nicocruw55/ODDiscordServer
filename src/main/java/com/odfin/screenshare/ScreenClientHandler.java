@@ -28,7 +28,7 @@ public class ScreenClientHandler {
                 userId = d.getUserId();
                 watchingId = d.getWatchingId();
                 sending = d.isSending();
-                NotificationServer.notifyClientsToUpdateChannel(channelId);
+                NotificationServer.notifyClients("Stream,"+channelId);
             }catch (Exception e){
                 cleanup();
             }
@@ -60,7 +60,7 @@ public class ScreenClientHandler {
             ex.printStackTrace();
         }
         ScreenServer.clientHandlers.remove(this);
-        NotificationServer.notifyClientsToUpdateChannel(channelId);
+        NotificationServer.notifyClients("Stream,"+channelId);
         System.out.println("Removing");
     }
 }

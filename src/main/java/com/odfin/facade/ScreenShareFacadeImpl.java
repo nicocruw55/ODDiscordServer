@@ -1,5 +1,6 @@
 package com.odfin.facade;
 
+import com.odfin.persistence.domain.User;
 import com.odfin.screenshare.ScreenClientHandler;
 import com.odfin.screenshare.ScreenServer;
 import com.odfin.voicechat.VoiceClientHandler;
@@ -17,7 +18,7 @@ public class ScreenShareFacadeImpl extends UnicastRemoteObject implements Screen
     }
 
     @Override
-    public int[] getScreenSharingUsersByChannelId(int channelId) throws RemoteException {
+    public List<User> getScreenSharingUsersByChannelId(int channelId) throws RemoteException {
         List<Integer> userIds = new ArrayList<>();
         for(ScreenClientHandler s : ScreenServer.clientHandlers){
             if(channelId == s.channelId && s.sending) {
@@ -25,13 +26,12 @@ public class ScreenShareFacadeImpl extends UnicastRemoteObject implements Screen
             }
         }
 
-        // convert to array
-        int[] userIdsArray = new int[userIds.size()];
-        for(int i = 0; i<userIds.size(); i++){
-            userIdsArray[i] = userIds.get(i);
+        List<User> users = new ArrayList<>();
+        for(int userId : userIds){
+            users.add(new ServerFacadeImpl().getUserFacade().getUserById(userId));
         }
 
-        return userIdsArray;
+        return users;
     }
 
     @Override

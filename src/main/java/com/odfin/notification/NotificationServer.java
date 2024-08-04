@@ -35,32 +35,16 @@ public class NotificationServer implements Runnable {
         }
     }
 
-    public static void notifyClientsToUpdateChannel(int channelId) {
-        List<User> usersFromChannel;
-        try {
-            usersFromChannel = new ServerFacadeImpl().getUserFacade().getAllUsersFromChannel(channelId);
-        } catch (RemoteException e) {
-            throw new RuntimeException("Error retrieving users from the channel", e);
-        }
-
-        List<Integer> userIds = new ArrayList<>();
-        for (User user : usersFromChannel) {
-            userIds.add(user.getId());
-        }
-
-        synchronized (handlers) {
-            for (NotificationClientHandler handler : handlers) {
-                if (userIds.contains(handler.userId)) {
-                    sendUpdateNotification(handler, channelId);
-                }
-            }
+    public static void notifyClients(String msg){
+        for (NotificationClientHandler handler : handlers) {
+            sendUpdateNotification(handler, msg);
         }
     }
 
-    private static void sendUpdateNotification(NotificationClientHandler handler, int channelId) {
+    private static void sendUpdateNotification(NotificationClientHandler handler, String message) {
         try {
             PrintWriter out = new PrintWriter(handler.socket.getOutputStream(), true);
-            out.println(channelId);
+            out.println(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

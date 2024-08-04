@@ -114,8 +114,7 @@ public class MySqlMessageDAO implements MessageDAO {
         stmt.setInt(4, message.getChannelId());
         stmt.executeUpdate();
 
-        // A new message was inserted to the channel. tell notification server to tell clients.
-        NotificationServer.notifyClientsToUpdateChannel(message.getChannelId());
+        NotificationServer.notifyClients("Message,"+message.getChannelId());
 
         ResultSet rs = stmt.getGeneratedKeys();
         if (rs.next()) {
