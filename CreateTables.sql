@@ -65,11 +65,11 @@ CREATE TABLE IF NOT EXISTS ChannelGroups
 CREATE TABLE IF NOT EXISTS ChannelGroupMembers
 (
     ID          int          auto_increment,
-    ChannelMembersID    int          not null,
+    ChannelGroupID    int          not null,
     UserID      int          not null,
     primary key (ID),
     constraint ChannelGroupMembers_ChannelMembersID_fk
-        foreign key (ChannelMembersID) references ChannelGroups (ID),
+        foreign key (ChannelGroupID) references ChannelGroups (ID),
     constraint ChannelGroupMembers_UserID_fk
         foreign key (UserID) references Users (ID)
 );
@@ -158,11 +158,13 @@ INSERT INTO ChannelMembers (ChannelID, UserID) VALUES (2, 3);
 
 -- Insert test data for ChannelGroups
 INSERT INTO ChannelGroups (name) VALUES ('Main ChannelGroup');
+INSERT INTO ChannelGroups (name) VALUES ('Secondary ChannelGroup');
 
 -- Insert test data for ChannelGroupMembers
-INSERT INTO ChannelGroupMembers (ChannelMembersID, UserID) VALUES (1, 1);
-INSERT INTO ChannelGroupMembers (ChannelMembersID, UserID) VALUES (1, 2);
-INSERT INTO ChannelGroupMembers (ChannelMembersID, UserID) VALUES (1, 3);
+INSERT INTO ChannelGroupMembers (ChannelGroupID, UserID) VALUES (1, 1);
+INSERT INTO ChannelGroupMembers (ChannelGroupID, UserID) VALUES (1, 2);
+INSERT INTO ChannelGroupMembers (ChannelGroupID, UserID) VALUES (1, 3);
+INSERT INTO ChannelGroupMembers (ChannelGroupID, UserID) VALUES (2, 1);
 
 -- Insert test data for ChannelGroupChannels
 INSERT INTO ChannelGroupChannels (ChannelGroupID, ChannelID) VALUES (1, 1);
