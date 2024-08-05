@@ -7,24 +7,34 @@ import com.odfin.persistence.factory.DAOFactory;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ChannelGroupFacadeImpl extends UnicastRemoteObject implements ChannelGroupFacade {
 
-    private final ChannelDAO ChannelGroupDAO;
+    private final ChannelGroupDAO ChannelGroupDAO;
 
     public ChannelGroupFacadeImpl() throws RemoteException {
         super(65300);
         this.ChannelGroupDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getChannelGroupDAO();
     }
-p
+
     @Override
-    public ChannelGroup getChannelGroupById(int chatId) {
-        return null;
+    public ChannelGroup getChannelGroupById(int chatId) throws RemoteException{
+        try {
+            return ChannelGroupDAO.getChannelGroupById(chatId);
+        } catch (SQLException e) {
+            throw new RemoteException("Error retrieving channel group", e);
+        }
     }
 
     @Override
     public List<ChannelGroup> getAllChannelGroups() {
+        try {
+            return ChannelGroupDAO.getChannelGroupsByUserID(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return List.of();
     }
 
@@ -48,6 +58,5 @@ p
 
     }
 
-    priva
 
 }
