@@ -10,7 +10,7 @@ public interface ChannelGroupDAO {
     ChannelGroup getChannelGroupById(int channelGroupId) throws SQLException;
     List<ChannelGroup> getChannelGroupsByUserID(int userID) throws SQLException;
     void updateChannelGroup(ChannelGroup channelGroup)throws SQLException;
-    boolean insertChannelGroup(ChannelGroup channelGroup)throws SQLException;
+    ChannelGroup createChannelGroup(ChannelGroup channelGroup, int userID)throws SQLException;
     boolean deleteChannelGroup(int channelGroupId)throws SQLException;
 
 }

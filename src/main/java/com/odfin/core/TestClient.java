@@ -1,15 +1,10 @@
 package com.odfin.core;
 
-import com.odfin.core.Notification.NotificationClient;
-import com.odfin.facade.*;
 import com.odfin.persistence.domain.ChannelGroup;
 import com.odfin.persistence.impl.MySQLChannelGroupDAO;
-import com.odfin.persistence.util.ServerHelper;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.sql.SQLException;
 
 public class TestClient {
@@ -46,13 +41,13 @@ public class TestClient {
         }
 
         try {
-            System.out.println(mySQLChannelGroupDAO.insertChannelGroup(new ChannelGroup(1, "Test5")));
+            System.out.println(mySQLChannelGroupDAO.createChannelGroup(new ChannelGroup(1, "Test5"), 1));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            System.out.println(mySQLChannelGroupDAO.getChannelGroupById(4));
+            System.out.println(mySQLChannelGroupDAO.getChannelGroupById(5));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

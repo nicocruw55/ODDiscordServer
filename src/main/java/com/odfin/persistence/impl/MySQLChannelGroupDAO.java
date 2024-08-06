@@ -74,8 +74,9 @@ public class MySQLChannelGroupDAO implements ChannelGroupDAO {
 
     }
 
+    //already add the current User by ID
     @Override
-    public boolean insertChannelGroup(ChannelGroup channelGroup) throws SQLException {
+    public ChannelGroup createChannelGroup(ChannelGroup channelGroup, int userID) throws SQLException {
 
         String query = "INSERT INTO " + TBL_NAME + " (" + COL_CHANNEL_GROUPS_NAME + ") VALUES (?)";
 
@@ -87,9 +88,14 @@ public class MySQLChannelGroupDAO implements ChannelGroupDAO {
         ResultSet resultSet = statement.getGeneratedKeys();
         if (resultSet.next()) {
             channelGroup.setId(resultSet.getInt(1));
-            return true;
         }
-        return false;
+
+        query = "INSERT INTO " + JOIN_NAME + " (" + COL_JOIN_CHANNEL_GROUP_ID + ", " + COL_JOIN_USER_ID + ") VALUES (?, ?)";
+        statement = connection.prepareStatement(query);
+        statement.setInt(1, channelGroup.getId());
+        statement.setInt(2, userID);
+        statement.executeUpdate();
+        return channelGroup;
     }
 
     @Override
