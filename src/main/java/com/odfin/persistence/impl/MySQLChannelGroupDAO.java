@@ -2,7 +2,8 @@ package com.odfin.persistence.impl;
 
 import com.odfin.persistence.dao.ChannelGroupDAO;
 import com.odfin.persistence.domain.ChannelGroup;
-import com.odfin.persistence.util.DBHelper;
+import com.odfin.util.DBHelper;
+
 
 import java.sql.*;
 import java.util.ArrayList;
