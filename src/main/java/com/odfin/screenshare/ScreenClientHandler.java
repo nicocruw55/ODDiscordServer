@@ -2,32 +2,30 @@ package com.odfin.screenshare;
 
 import com.odfin.notification.NotificationServer;
 
-import java.io.*;
-import java.net.Socket;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class ScreenClientHandler {
 
-    private ObjectOutputStream output;
-    private ObjectInputStream in;
-    private Socket socket;
-    private BufferedImage previousImage;
+    public ObjectOutputStream output;
     public int channelId = -1;
     public int userId = -1;
     public int watchingId = -1;
     public boolean sending = false;
+    private ObjectInputStream in;
+    private Socket socket;
 
-    public ScreenClientHandler(Socket socket) throws IOException {
+    public ScreenClientHandler(Socket socket) throws Exception {
         this.socket = socket;
         this.output = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
-        this.previousImage = null; // Initial state, no previous image
 
         new Thread(() -> {
             try {
-                // First message
+                // first message
                 ScreenDataPacket d = (ScreenDataPacket) in.readObject();
                 channelId = d.getChannelId();
                 userId = d.getUserId();
@@ -35,43 +33,19 @@ public class ScreenClientHandler {
                 sending = d.isSending();
                 NotificationServer.notifyClients("Stream," + channelId);
 
-                // Main loop to handle incoming data and send updates
+                // loop -> gets input from corresponding client and sends it to all other clients
                 while (true) {
                     d = (ScreenDataPacket) in.readObject();
-                    BufferedImage currentImage = toBufferedImage(d.getData());
-                    if (previousImage != null) {
-                        BufferedImage diffImage = new ImageComparer().getDifferenceImage(previousImage, currentImage);
-
-                        // Convert the difference image to byte array
-                        byte[] imageData = ((DataBufferByte) diffImage.getRaster().getDataBuffer()).getData();
-                        ScreenDataPacket diffPacket = new ScreenDataPacket(imageData, channelId, userId, sending, watchingId);
-
-                        // Send the difference to all other clients
-                        for (ScreenClientHandler s : ScreenServer.clientHandlers) {
-                            if (s != this) {
-                                s.output.writeObject(diffPacket);
-                                s.output.flush();
-                            }
-                        }
-                        previousImage = currentImage;
-                    } else {
-                        // For the initial connection, send the full image
-                        byte[] imageData = ((DataBufferByte) currentImage.getRaster().getDataBuffer()).getData();
-                        ScreenDataPacket initialPacket = new ScreenDataPacket(imageData, channelId, userId, sending, watchingId);
-                        output.writeObject(initialPacket);
-                        output.flush();
-                        previousImage = currentImage;
+                    for (ScreenClientHandler s : ScreenServer.clientHandlers) {
+                        if (s == this) continue;
+                        s.output.writeObject(d);
+                        s.output.flush();
                     }
                 }
             } catch (Exception e) {
                 cleanup();
             }
         }).start();
-    }
-
-    private BufferedImage toBufferedImage(byte[] data) throws IOException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(data);
-        return ImageIO.read(bais);
     }
 
     public void cleanup() {

@@ -39,7 +39,7 @@ public class VoiceClientHandler {
                     }
                     VoiceDataPacket d = (VoiceDataPacket) in.readObject();
                     for (VoiceClientHandler v : VoiceServer.clientHandlers) {
-                        //if(v == this) continue;
+                        if(v == this) continue;
                         //if(v.voiceChatID.equals(voiceChatID)){
                         v.output.writeObject(d);
                         v.output.flush();

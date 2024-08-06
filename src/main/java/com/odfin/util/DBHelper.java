@@ -40,7 +40,7 @@ public class DBHelper {
     private static String getMySqlUrl() {
         String host = "cruw-community.de";
         int port = 3306;
-        String dbName = "ODDiscordViewMissingBackup";
+        String dbName = "ODDiscord";
 
         return String.format("jdbc:mysql://%s:%d/%s?allowMultiQueries=true", host, port, dbName);
     }
