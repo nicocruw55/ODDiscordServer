@@ -1,6 +1,5 @@
 package com.odfin.facade;
 
-import com.odfin.persistence.dao.ChannelDAO;
 import com.odfin.persistence.dao.ChannelGroupDAO;
 import com.odfin.persistence.domain.ChannelGroup;
 import com.odfin.persistence.factory.DAOFactory;
@@ -28,35 +27,40 @@ public class ChannelGroupFacadeImpl extends UnicastRemoteObject implements Chann
         }
     }
 
+
     @Override
-    public List<ChannelGroup> getAllChannelGroups() {
+    public List<ChannelGroup> getAllChannelGroupsByUserId(int userId) throws RemoteException {
         try {
-            return ChannelGroupDAO.getChannelGroupsByUserID(1);
+            return ChannelGroupDAO.getChannelGroupsByUserID(userId);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RemoteException("Error retrieving all channel group by UserID", e);
         }
-        return List.of();
     }
 
     @Override
-    public List<ChannelGroup> getAllChannelGroupsByUserId(int userId) {
-        return List.of();
+    public void updateChannelGroup(ChannelGroup channelGroup) throws RemoteException {
+        try {
+            ChannelGroupDAO.updateChannelGroup(channelGroup);
+        } catch (SQLException e) {
+            throw new RemoteException("Error updating channel group", e);
+        }
     }
 
     @Override
-    public void updateChannelGroup(ChannelGroup channelGroup) {
-
+    public ChannelGroup createChannelGroup(ChannelGroup channelGroup, int userID) throws RemoteException {
+        try {
+            return ChannelGroupDAO.createChannelGroup(channelGroup, userID);
+        } catch (SQLException e) {
+           throw new RemoteException("Error inserting channel group", e);
+        }
     }
 
     @Override
-    public void insertChannelGroup(ChannelGroup channelGroup) {
-
+    public boolean deleteChannelGroup(int chatId) throws RemoteException {
+        try {
+            return ChannelGroupDAO.deleteChannelGroup(chatId);
+        } catch (SQLException e) {
+            throw new RemoteException("Error deleting channel group", e);
+        }
     }
-
-    @Override
-    public void deleteChannelGroup(int chatId) {
-
-    }
-
-
 }
