@@ -12,6 +12,7 @@ public interface MessageFacade extends Remote{
     Message getMessageById(int messageId) throws RemoteException;
     List<Message> getAllMessages() throws RemoteException;
     List<Message> getAllMessagesByChannelId(int channelId) throws RemoteException; // for chat history
+    List<Message> getMessagesByChannelIdLazyLoading(int channelId, Message lastMessage, int count) throws RemoteException; // for chat history
     void updateMessage(Message message) throws RemoteException;
     void deleteMessage(int messageId) throws RemoteException;
     Message sendMessage(String content, int senderId, int channelId) throws RemoteException;

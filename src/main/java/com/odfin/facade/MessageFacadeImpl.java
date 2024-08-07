@@ -41,7 +41,16 @@ public class MessageFacadeImpl extends UnicastRemoteObject implements MessageFac
         try {
             return messageDAO.getAllMessagesByChannelId(channelId);
         } catch (SQLException e) {
-            throw new RemoteException("Error updating message", e);
+            throw new RemoteException("Error retrieving all messages", e);
+        }
+    }
+
+    @Override
+    public List<Message> getMessagesByChannelIdLazyLoading(int channelId, Message lastMessage, int count) throws RemoteException {
+        try {
+            return messageDAO.getMessagesByChannelIdLazyLoading(channelId, lastMessage, count);
+        } catch (SQLException e) {
+            throw new RemoteException("Error lazy loading messages", e);
         }
     }
 
