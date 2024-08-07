@@ -22,6 +22,17 @@ CREATE TABLE IF NOT EXISTS Users
         foreign key (status_ID) references Statuses (ID)
 );
 
+create table Friends
+(
+    UserID   int not null,
+    FriendID int not null,
+    constraint Friends_pk
+        primary key (UserID, FriendID),
+    constraint Friends_Users_ID_ID_fk
+        foreign key (FriendID, UserID) references Users (ID, ID)
+);
+
+
 CREATE TABLE IF NOT EXISTS Channels
 (
     ID          int          auto_increment,
@@ -131,25 +142,30 @@ CREATE TABLE IF NOT EXISTS RolePermissions
         foreign key (PermissionID) references Permissions (ID)
 );
 
+
+
 # Testdata
 -- Insert test data for Statuses
-INSERT INTO Statuses (ID, color) VALUES (1, 'green');
-INSERT INTO Statuses (ID, color) VALUES (2, 'red');
-INSERT INTO Statuses (ID, color) VALUES (3, 'yellow');
+INSERT INTO Statuses (ID, color, description) VALUES (1, 'green', 'Online');
+INSERT INTO Statuses (ID, color, description) VALUES (2, 'red', 'Offline');
+INSERT INTO Statuses (ID, color, description) VALUES (3, 'yellow', 'Away From Keyboard');
 
 -- Insert test data for Users
-INSERT INTO Users (name, password, status_ID, status_text) VALUES ('admin', 'admin', 1, 'Online');
-INSERT INTO Users (name, password, status_ID, status_text) VALUES ('user', 'user', 2, 'Offline');
-INSERT INTO Users (name, password, status_ID, status_text) VALUES ('dennis', 'dennis', 3, 'Away');
+insert into Users (name, password, status_ID) values ('a', 'a', 1);
+INSERT INTO Users (name, password, status_ID) VALUES ('admin', 'admin', 1);
+INSERT INTO Users (name, password, status_ID) VALUES ('obi', 'obi', 2);
+INSERT INTO Users (name, password, status_ID) VALUES ('amir', 'amir', 3);
 
 -- Insert test data for Channels
 INSERT INTO Channels (name, topic) VALUES ('general', 'General discussion');
 INSERT INTO Channels (name, topic) VALUES ('random', 'Random chat');
+INSERT INTO Channels (name, topic) VALUES ('programming', 'Programming discussion');
 
 -- Insert test data for Messages
 INSERT INTO Messages (content, user_ID, channel_ID) VALUES ('Hello, world!', 1, 1);
 INSERT INTO Messages (content, user_ID, channel_ID) VALUES ('How are you?', 2, 1);
 INSERT INTO Messages (content, user_ID, channel_ID) VALUES ('Good morning!', 3, 2);
+INSERT INTO Messages (content, user_ID, channel_ID) VALUES ('Server channel', 1, 3);
 
 -- Insert test data for ChannelMembers
 INSERT INTO ChannelMembers (ChannelID, UserID) VALUES (1, 1);
@@ -167,7 +183,7 @@ INSERT INTO ChannelGroupMembers (ChannelGroupID, UserID) VALUES (1, 3);
 INSERT INTO ChannelGroupMembers (ChannelGroupID, UserID) VALUES (2, 1);
 
 -- Insert test data for ChannelGroupChannels
-INSERT INTO ChannelGroupChannels (ChannelGroupID, ChannelID) VALUES (1, 1);
+INSERT INTO ChannelGroupChannels (ChannelGroupID, ChannelID) VALUES (1, 4);
 INSERT INTO ChannelGroupChannels (ChannelGroupID, ChannelID) VALUES (1, 2);
 
 -- Insert test data for Roles
@@ -204,5 +220,19 @@ select `m`.`ID`         AS `ID`,
        `m`.`user_ID`    AS `user_ID`,
        `u`.`name`       AS `name`,
        `m`.`content`    AS `content`
-from (`ODDiscord`.`Messages` `m` join `ODDiscord`.`Users` `u` on (`u`.`ID` = `m`.`user_ID`))
+from (`ODDiscord`.`Messages` `m` join `ODDiscord`.`Users` `u` on (`u`.`ID` = `m`.`user_ID`));
 
+
+create definer = DAO@`%` view FriendlistWithFriendname as
+select `f`.`UserID` AS `UserID`,
+       `u`.`ID` AS `friendID`,
+       `u`.`name` AS `name`
+from (`ODDiscord`.`Friends` `f` join `ODDiscord`.`Users` `u` on (`f`.`FriendID` = `u`.`ID`));
+
+
+create definer = DAO@`%` view UserWithStatus as
+select `u`.`ID` AS `id`,
+       `u`.`name` AS `name`,
+       `u`.`status_text` AS `status_text`,
+       `s`.`description` AS `description`
+from (`ODDiscord`.`Users` `u` join `ODDiscord`.`Statuses` `s` on (`u`.`status_ID` = `s`.`ID`));
