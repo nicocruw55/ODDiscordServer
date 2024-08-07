@@ -12,10 +12,12 @@ import static com.odfin.util.DBHelper.*;
 
 public class MySqlChannelDAO implements ChannelDAO {
 
-    public static final String TBL_NAME = "Channels";
+    public static final String TBL_NAME = "Channels c";
     public static final String COL_ID = "ID";
     public static final String COL_NAME = "Name";
     public static final String COL_TOPIC = "Topic";
+
+    public static final String JOIN_TABLE = "ChannelGroupChannels cgc";
 
     public Channel createChannel(ResultSet rs) throws SQLException {
         Channel channel = new Channel();
@@ -26,7 +28,7 @@ public class MySqlChannelDAO implements ChannelDAO {
     }
 
     @Override
-    public Channel getChannelbyId(int id) throws SQLException {
+    public Channel getChannelById(int id) throws SQLException {
         String query = SELECT + "*" + FROM + TBL_NAME + WHERE + COL_ID + " = ?";
 
         Connection connection = DBHelper.getConnection();
@@ -39,6 +41,22 @@ public class MySqlChannelDAO implements ChannelDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public List<Channel> getChannelsByChannelGroupID(int channelGroupId) throws SQLException {
+        String query =SELECT + "*" + FROM + TBL_NAME + " JOIN " + JOIN_TABLE + " ON c." + COL_ID + " = cgc.channelId WHERE cgc.channelGroupId = ?";
+
+        List<Channel> channels = new ArrayList<>();
+        Connection connection = DBHelper.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, channelGroupId);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            channels.add(createChannel(resultSet));
+        }
+        return channels;
     }
 
     @Override

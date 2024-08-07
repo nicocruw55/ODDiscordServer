@@ -21,11 +21,21 @@ public class ChannelFacadeImpl extends UnicastRemoteObject implements ChannelFac
     @Override
     public Channel getChannelById(int chatId) throws RemoteException {
         try {
-            return channelDAO.getChannelbyId(chatId);
+            return channelDAO.getChannelById(chatId);
         } catch (SQLException e) {
             throw new RemoteException("Error retrieving chat", e);
         }
     }
+
+    @Override
+    public List<Channel> getChannelsByChannelGroupID(int channelGroupId) throws RemoteException {
+        try {
+            return channelDAO.getChannelsByChannelGroupID(channelGroupId);
+        } catch (SQLException e) {
+            throw new RemoteException("Error retrieving chat", e);
+        }
+    }
+
     @Override
     public List<Channel> getAllChannels() throws RemoteException {
         try {
