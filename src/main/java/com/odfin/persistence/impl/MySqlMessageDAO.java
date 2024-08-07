@@ -8,6 +8,7 @@ import com.odfin.util.DBHelper;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.odfin.util.DBHelper.*;
@@ -82,9 +83,46 @@ public class MySqlMessageDAO implements MessageDAO {
     }
 
     @Override
-    public List<Message> getAllMessagesByChannelIdLazyLoading(int channelId) throws SQLException {
-        return null;
+    public List<Message> getMessagesByChannelIdLazyLoading(int channelId, Message lastMessage, int count) throws SQLException {
+        List<Message> messages = new ArrayList<>();
+
+        String query;
+        Connection conn = DBHelper.getConnection();
+        PreparedStatement stmt;
+
+        if (lastMessage == null) {
+            // Lade die neuesten Nachrichten
+            query = SELECT + "*" + FROM + VIEW_NAME +
+                    WHERE + COL_CHANNEL + " = ?" +
+                    " ORDER BY " + COL_TIMESTAMP + " DESC LIMIT ?";
+
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, channelId);
+            stmt.setInt(2, count);
+        } else {
+            // Lade ältere Nachrichten basierend auf lastMessage
+            query = SELECT + "*" + FROM + VIEW_NAME +
+                    WHERE + COL_CHANNEL + " = ?" +
+                    " AND " + COL_TIMESTAMP + " < ?" +
+                    " ORDER BY " + COL_TIMESTAMP + " DESC LIMIT ?";
+
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, channelId);
+            stmt.setTimestamp(2, Timestamp.valueOf(lastMessage.getTimestamp()));
+            stmt.setInt(3, count);
+        }
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            messages.add(createMessage(rs));
+        }
+
+        messages.sort(Comparator.comparing(Message::getTimestamp));
+
+        return messages;
     }
+
 
     @Override
     public Message updateMessage(Message message) throws SQLException {
