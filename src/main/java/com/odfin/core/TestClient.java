@@ -2,6 +2,7 @@ package com.odfin.core;
 
 import com.odfin.persistence.domain.ChannelGroup;
 import com.odfin.persistence.impl.MySQLChannelGroupDAO;
+import com.odfin.persistence.impl.MySqlChannelDAO;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -28,29 +29,36 @@ public class TestClient {
 //        channelGroupFacade.getAllChannelGroups().forEach(System.out::println);
         //Test MySQLChannelGroupDAO
         MySQLChannelGroupDAO mySQLChannelGroupDAO = new MySQLChannelGroupDAO();
+        MySqlChannelDAO mySqlChannelDAO = new MySqlChannelDAO();
+//        try {
+//            mySQLChannelGroupDAO.getChannelGroupsByUserID(1).forEach(System.out::println);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        try {
+//            System.out.println(mySQLChannelGroupDAO.getChannelGroupById(1));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        try {
+//            System.out.println(mySQLChannelGroupDAO.createChannelGroup(new ChannelGroup(1, "Test5"), 1));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        try {
+//            System.out.println(mySQLChannelGroupDAO.getChannelGroupById(5));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
         try {
-            mySQLChannelGroupDAO.getChannelGroupsByUserID(1).forEach(System.out::println);
+            mySqlChannelDAO.getChannelsByChannelGroupID(1).forEach(System.out::println);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        try {
-            System.out.println(mySQLChannelGroupDAO.getChannelGroupById(1));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            System.out.println(mySQLChannelGroupDAO.createChannelGroup(new ChannelGroup(1, "Test5"), 1));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            System.out.println(mySQLChannelGroupDAO.getChannelGroupById(5));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 

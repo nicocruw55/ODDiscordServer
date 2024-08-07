@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface ChannelDAO {
 
-    Channel getChannelbyId(int chatId) throws SQLException;
+    Channel getChannelById(int chatId) throws SQLException;
+    List<Channel> getChannelsByChannelGroupID(int channelGroupId) throws SQLException;
     List<Channel> getAllChannels() throws SQLException;
     List<Channel> getAllChannelsByUserId(int userId) throws SQLException;
     void updateChannel(Channel channel) throws SQLException;
