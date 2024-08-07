@@ -1,7 +1,12 @@
 package com.odfin.facade;
 
+import com.odfin.voicechat.VoiceServer;
+
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacade{
 
@@ -9,7 +14,8 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
     private static UserFacade userFacade;
     private static ChannelFacade channelFacade;
     private static VoiceChatFacade voiceChatFacade;
-    private static ScreenShareFacade screenShareFacade;
+    private static ChannelGroupFacadeImpl channelGroupFacade;
+    private static ScreenShareFacadeImpl screenShareFacade;
 
     public ServerFacadeImpl() throws RemoteException {
         super(65300);
@@ -49,10 +55,18 @@ public class ServerFacadeImpl extends UnicastRemoteObject implements ServerFacad
 
     @Override
     public ScreenShareFacade getScreenShareFacade() throws RemoteException {
-        if(screenShareFacade == null)
+        if (screenShareFacade == null)
             screenShareFacade = new ScreenShareFacadeImpl();
-
         return screenShareFacade;
+    }
+
+
+    @Override
+    public ChannelGroupFacade getChannelGroupFacade() throws RemoteException {
+
+        if(channelGroupFacade == null)
+            channelGroupFacade = new ChannelGroupFacadeImpl();
+        return channelGroupFacade;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.odfin.persistence.factory;
 
 import com.odfin.persistence.dao.ChannelDAO;
+import com.odfin.persistence.dao.ChannelGroupDAO;
 import com.odfin.persistence.dao.MessageDAO;
 import com.odfin.persistence.dao.UserDAO;
+import com.odfin.persistence.impl.MySQLChannelGroupDAO;
 import com.odfin.persistence.impl.MySqlChannelDAO;
 import com.odfin.persistence.impl.MySqlMessageDAO;
 import com.odfin.persistence.impl.MySqlUserDAO;
@@ -22,5 +24,10 @@ public class MySqlDAOFactory extends DAOFactory{
     @Override
     public ChannelDAO getChatDAO() {
         return new MySqlChannelDAO();
+    }
+
+    @Override
+    public ChannelGroupDAO getChannelGroupDAO() {
+        return new MySQLChannelGroupDAO();
     }
 }
