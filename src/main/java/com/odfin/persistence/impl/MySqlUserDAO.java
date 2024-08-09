@@ -12,6 +12,8 @@ import static com.odfin.util.DBHelper.*;
 
 public class MySqlUserDAO implements UserDAO {
 
+    public static final String VIEW_NAME = "UserWithStatus";
+    public static final String COL_STATUS_DESCRIPTION = "status_description";
     public static final String TBL_NAME = "Users";
     public static final String COL_ID = "ID";
     public static final String COL_NAME = "name";
@@ -19,12 +21,13 @@ public class MySqlUserDAO implements UserDAO {
     public static final String COL_STATUS_TEXT = "status_text";
     public static final String COL_STATUS_ID = "status_ID";
 
+
     public User createUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getInt(COL_ID));
         user.setName(rs.getString(COL_NAME));
         user.setPassword(rs.getString(COL_PASSWORD));
-        user.setStatus(rs.getString(COL_STATUS_TEXT));
+        user.setStatusDescription( (rs.getString(COL_STATUS_TEXT)!=null) ? rs.getString(COL_STATUS_TEXT) : rs.getString(COL_STATUS_DESCRIPTION));//if status_text from user is null, use status_description as a default value
         user.setStatusId(rs.getInt(COL_STATUS_ID));
 
         return user;
@@ -32,7 +35,7 @@ public class MySqlUserDAO implements UserDAO {
 
     @Override
     public User getUserById(int userId) throws SQLException {
-        String query = SELECT + " * FROM " + TBL_NAME + " WHERE " + COL_ID + " = ?";
+        String query = SELECT + " * FROM " + VIEW_NAME + " WHERE " + COL_ID + " = ?";
 
         Connection connection = DBHelper.getConnection();
         PreparedStatement statement = connection.prepareStatement(query);
@@ -47,7 +50,7 @@ public class MySqlUserDAO implements UserDAO {
 
     @Override
     public List<User> getAllUsers() throws SQLException {
-        String query = SELECT + " * FROM " + TBL_NAME;
+        String query = SELECT + " * FROM " + VIEW_NAME;
 
         List<User> users = new ArrayList<>();
         Connection connection = DBHelper.getConnection();
@@ -62,7 +65,7 @@ public class MySqlUserDAO implements UserDAO {
 
     @Override
     public List<User> getAllUsersFromChannel(int channelId) throws SQLException {
-        String query = "SELECT u.* FROM " + TBL_NAME + " u JOIN ChannelMembers cm ON u." + COL_ID + " = cm.userId WHERE cm.channelId = ?";
+        String query = "SELECT u.* FROM " + VIEW_NAME + " u JOIN ChannelMembers cm ON u." + COL_ID + " = cm.userId WHERE cm.channelId = ?";
 
         List<User> users = new ArrayList<>();
         Connection connection = DBHelper.getConnection();
@@ -84,7 +87,7 @@ public class MySqlUserDAO implements UserDAO {
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, user.getName());
         statement.setString(2, user.getPassword());
-        statement.setString(3, user.getStatus());
+        statement.setString(3, user.getStatusDescription());
         statement.setInt(4, user.getStatusId());
         statement.setInt(5, user.getId());
         statement.executeUpdate();
@@ -104,7 +107,7 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     public User login(String username, String password) throws SQLException {
-        String query = "SELECT * FROM " + TBL_NAME + " WHERE " + COL_NAME + " = ? AND " + COL_PASSWORD + " = ?";
+        String query = "SELECT * FROM " + VIEW_NAME + " WHERE " + COL_NAME + " = ? AND " + COL_PASSWORD + " = ?";
 
         Connection conn = DBHelper.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -125,7 +128,7 @@ public class MySqlUserDAO implements UserDAO {
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, user.getName());
         statement.setString(2, user.getPassword());
-        statement.setString(3, user.getStatus());
+        statement.setString(3, user.getStatusDescription());
         statement.setInt(4, user.getStatusId());
         statement.executeUpdate();
 

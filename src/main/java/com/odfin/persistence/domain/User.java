@@ -9,16 +9,16 @@ public class User implements Serializable {
     private String name;
     private String password;
     private int statusId;
-    private String status;
+    private String statusDescription;
 
     public User() {
     }
 
-    public User(int id, String name, String password, String status, int statusId) {
+    public User(int id, String name, String password, String statusDescription, int statusId) {
         this.id = id;
         this.name = name;
         this.password = password;
-        this.status = status;
+        this.statusDescription = statusDescription;
         this.statusId = statusId;
     }
 
@@ -46,12 +46,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusDescription() {
+        return statusDescription;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusDescription(String statusDescription) {
+        this.statusDescription = statusDescription;
     }
 
     public int getStatusId() {
@@ -61,6 +61,7 @@ public class User implements Serializable {
     public void setStatusId(int statusId) {
         this.statusId = statusId;
     }
+
 
     @Override
     public boolean equals(Object o) {
